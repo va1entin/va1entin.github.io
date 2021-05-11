@@ -1,2 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>music on Blog</title><link>https://valh.io/tags/music/</link><description>Recent content in music on Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 05 Dec 2020 17:11:08 +0000</lastBuildDate><atom:link href="https://valh.io/tags/music/index.xml" rel="self" type="application/rss+xml"/><item><title>Simple CLI audio metadata editor: tag_dat.py</title><link>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</link><pubDate>Sat, 05 Dec 2020 17:11:08 +0000</pubDate><guid>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</guid><description>Audio metadata is often not particularly easy to manage in a simple and quick manner. There&amp;rsquo;s lots of tools providing this feature but many of them have a ton of other additional functionality or are full-on music library managers. I wanted a very simple command-line tool to quickly change the title, artist and album tags of audio metadata - the result is &amp;ldquo;tag_dat.py&amp;rdquo; and available in my tools repository.
-tag_dat.py iterates over a file or all files in a given path (default: current path), sets the filename (without file ending) as title and given arguments album and artist as audio tags.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>music on Blog</title>
+    <link>https://valh.io/tags/music/</link>
+    <description>Recent content in music on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 05 Dec 2020 17:11:08 +0000</lastBuildDate><atom:link href="https://valh.io/tags/music/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Simple CLI audio metadata editor: tag_dat.py</title>
+      <link>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</link>
+      <pubDate>Sat, 05 Dec 2020 17:11:08 +0000</pubDate>
+      
+      <guid>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</guid>
+      <description>Audio metadata is often not particularly easy to manage in a simple and quick manner. There&amp;rsquo;s lots of tools providing this feature but many of them have a ton of other additional functionality or are full-on music library managers. I wanted a very simple command-line tool to quickly change the title, artist and album tags of audio metadata - the result is &amp;ldquo;tag_dat.py&amp;rdquo; and available in my tools repository.
+tag_dat.py iterates over a file or all files in a given path (default: current path), sets the filename (without file ending) as title and given arguments album and artist as audio tags.</description>
+    </item>
+    
+  </channel>
+</rss>

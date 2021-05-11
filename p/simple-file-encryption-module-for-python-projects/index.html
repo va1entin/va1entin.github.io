@@ -1,22 +1,243 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content="tl;dr Plasm focuses on a very specific use case: encrypting and decrypting files using public key encryption. If plasm doesn&amp;rsquo;t fit the scope of what you want to do, feel free to have a look at pynacl&amp;rsquo;s documentation and use it directly.
-Why I have experimented a lot with camera software for the Raspberry Pi. One project that particularly stuck with me is motionEye, a web frontend for the motion daemon, which allows you to easily set up an open source motion triggered camera for about 50€."><meta name=author content="Valentin Heidelberger"><link rel=canonical href=https://valh.io/p/simple-file-encryption-module-for-python-projects/><link rel=icon type=image/x-icon href=/img/favicon.ico><title>Simple file encryption module for Python projects</title><link rel=stylesheet href=/css/styles.css><link rel=stylesheet href=/css/syntax.css><link id=custom_css href=/css/custom.css rel=stylesheet><link id=dark_css href=/css/dark.css rel=stylesheet><script src=/js/toggle_theme.js></script><script src=https://use.fontawesome.com/releases/v5.15.3/js/all.js crossorigin=anonymous></script><link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel=stylesheet type=text/css><link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel=stylesheet type=text/css></head><body><nav class="navbar navbar-expand-lg navbar-light fixed-top" id=mainNav><div class=container><a class=navbar-brand href=/index.html>Valentin Heidelberger</a>
-<button class="navbar-toggler navbar-toggler-right" type=button data-toggle=collapse data-target=#navbarResponsive aria-controls=navbarResponsive aria-expanded=false aria-label="Toggle navigation">
-Menu
-<i class="fas fa-bars"></i></button><div class="collapse navbar-collapse" id=navbarResponsive><ul class="navbar-nav ml-auto"><li class=nav-item><a class=nav-link title=Blog href=/index.html><span class="fa fa-book-open"></span><span>Blog</span></a></li><li class=nav-item><a href=/search/ class=nav-link title=Search><span class="fa fa-search nav-search-icon"></span><span>Search</span></a></li><li class=nav-item onclick=toggle()><a class=nav-link title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent"><span class="fa fa-adjust"></span><span>Theme</span></a></li></ul></div></div></nav><header class=masthead style=background-image:url(/img/blog-bg.webp)><div class=overlay></div><div class=container><div class=row><div class="col-lg-8 col-md-10 mx-auto"><div class=post-heading><h1>Simple file encryption module for Python projects</h1><h2 class=subheading>An introduction to plasm</h2><span class=meta>Posted by Valentin Heidelberger on September 8, 2018</span>
-<span class=meta>Tags:
-<a href=/tags/technology><i class="fa fa-tag"></i>
-technology</a></span></div></div></div></div></header><article><aside id=custom_toc><nav id=TableOfContents><ul><li><a href=#tldr>tl;dr</a></li><li><a href=#why>Why</a></li><li><a href=#what-it-is>What it is</a></li><li><a href=#installation-and-how-it-works>Installation and how it works</a></li><li><a href=#integration-with-motioneye>Integration with motionEye</a></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></aside><div class=container><div class=row><div class="col-lg-8 col-md-10 mx-auto"><h1 id=tldr>tl;dr</h1><p>Plasm focuses on a very specific use case: encrypting and decrypting files using public key encryption. If plasm doesn&rsquo;t fit the scope of what you want to do, feel free to have a look at <a href=https://pynacl.readthedocs.io>pynacl&rsquo;s documentation</a> and use it directly.</p><h1 id=why>Why</h1><p>I have experimented a lot with camera software for the Raspberry Pi. One project that particularly stuck with me is <a href=https://github.com/ccrisan/motioneye>motionEye</a>, a web frontend for the motion daemon, which allows you to easily set up an open source motion triggered camera for about 50€. MotionEye also offers a cloud upload functionality, which I like a lot. Unfortunately it doesn&rsquo;t allow the user to encrypt their media files before uploading them. Since I wanted to use Google Drive as my data grave but at the same time not upload unencrypted media files into the cloud, I decided to build a simple python module to easily hack file encryption into motionEye.</p><h1 id=what-it-is>What it is</h1><p>The result of this is <a href=https://github.com/va1entin/plasm>plasm</a>, which stands for <code>PynacL AbStraction Module</code>. Plasm is based on <a href=https://github.com/pyca/pynacl>pynacl</a>, which in turn binds to <a href=https://libsodium.org>libsodium</a>.
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="tl;dr Plasm focuses on a very specific use case: encrypting and decrypting files using public key encryption. If plasm doesn&amp;rsquo;t fit the scope of what you want to do, feel free to have a look at pynacl&amp;rsquo;s documentation and use it directly.
+Why I have experimented a lot with camera software for the Raspberry Pi. One project that particularly stuck with me is motionEye, a web frontend for the motion daemon, which allows you to easily set up an open source motion triggered camera for about 50€."><meta name="author" content="Valentin Heidelberger">
+
+<link rel="canonical" href="https://valh.io/p/simple-file-encryption-module-for-python-projects/">
+
+
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+<title>Simple file encryption module for Python projects</title>
+
+
+<link rel="stylesheet" href="/css/styles.css" />
+
+
+<link rel="stylesheet" href="/css/syntax.css" />
+
+
+<link id="custom_css" href="/css/custom.css" rel="stylesheet">
+
+
+<link id="dark_css" href="/css/dark.css" rel="stylesheet">
+
+
+
+
+<script src="/js/toggle_theme.js"></script>
+
+
+
+<script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/index.html">Valentin Heidelberger</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" title="Blog" href="/index.html">
+            <span class="fa fa-book-open"></span>
+            <span> Blog</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a href="/search/" class="nav-link" title="Search">
+            <span class="fa fa-search nav-search-icon"></span>
+            <span> Search</span>
+          </a>
+        </li>
+        
+        
+          <li class="nav-item" onclick="toggle()">
+            <a class="nav-link" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
+              <span class="fa fa-adjust"></span>
+              <span> Theme</span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+  
+
+<header class="masthead" style="background-image: url('/img/blog-bg.webp')">
+  <div class="overlay"></div>
+  <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          
+          
+          <div class="post-heading">
+            <h1>Simple file encryption module for Python projects</h1>
+            <h2 class="subheading">An introduction to plasm</h2>
+            <span class="meta">Posted by Valentin Heidelberger on September 8, 2018</span>
+            
+            <span class="meta"> Tags:
+              
+              <a href="/tags/technology">
+                    <i class="fa fa-tag"></i>
+                    technology
+                  </a>
+                  
+                </span>
+                
+              </div>
+              
+        </div>
+      </div>
+    </div>
+</header>
+  
+
+<article>
+  
+<aside id="custom_toc">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#tldr">tl;dr</a></li>
+    <li><a href="#why">Why</a></li>
+    <li><a href="#what-it-is">What it is</a></li>
+    <li><a href="#installation-and-how-it-works">Installation and how it works</a></li>
+    <li><a href="#integration-with-motioneye">Integration with motionEye</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h1 id="tldr">tl;dr</h1>
+<p>Plasm focuses on a very specific use case: encrypting and decrypting files using public key encryption. If plasm doesn&rsquo;t fit the scope of what you want to do, feel free to have a look at <a href="https://pynacl.readthedocs.io">pynacl&rsquo;s documentation</a> and use it directly.</p>
+<h1 id="why">Why</h1>
+<p>I have experimented a lot with camera software for the Raspberry Pi. One project that particularly stuck with me is <a href="https://github.com/ccrisan/motioneye">motionEye</a>, a web frontend for the motion daemon, which allows you to easily set up an open source motion triggered camera for about 50€. MotionEye also offers a cloud upload functionality, which I like a lot. Unfortunately it doesn&rsquo;t allow the user to encrypt their media files before uploading them. Since I wanted to use Google Drive as my data grave but at the same time not upload unencrypted media files into the cloud, I decided to build a simple python module to easily hack file encryption into motionEye.</p>
+<h1 id="what-it-is">What it is</h1>
+<p>The result of this is <a href="https://github.com/va1entin/plasm">plasm</a>, which stands for <code>PynacL AbStraction Module</code>. Plasm is based on <a href="https://github.com/pyca/pynacl">pynacl</a>, which in turn binds to <a href="https://libsodium.org">libsodium</a>.
 Plasm uses public key encryption and is supposed to make the <strong>creation of public key pairs</strong> as well as <strong>encryption and decryption of files</strong> very simple.
 One key requirement for me was that plasm had to be able to encrypt using only a public key. The private key, which is required to decrypt, shouldn&rsquo;t be required so that I could store it in a safe place on another device. To accomplish this, I chose to use the <code>sealedBox</code> construct, because it only requires a public key. The main difference of the <code>sealedBox</code> compared to another construct simply called <code>Box</code> is that it doesn&rsquo;t offer cryptographic proof of the sender’s authorship, which is out of scope for plasm anyway.
-Additionally, I wanted to protect the private key by encrypting it as well using secret key encryption. That&rsquo;s why plasm requires a password for creating a key pair and decrypting files. The password is used to encrypt and decrypt the key so that an attacker needs both the private key file <strong>and</strong> the password to be able to decrypt files.</p><h1 id=installation-and-how-it-works>Installation and how it works</h1><p>Please have a look at the <a href=https://github.com/va1entin/plasm/blob/master/README.md>README</a> to find out how to use plasm.</p><p>Plasm is currently not available via PyPi, but you can install it directly from Github as follows:</p><div class=highlight><pre class=chroma><code class=language-bash data-lang=bash>wget https://github.com/va1entin/plasm/-/archive/master/plasm-master.zip
+Additionally, I wanted to protect the private key by encrypting it as well using secret key encryption. That&rsquo;s why plasm requires a password for creating a key pair and decrypting files. The password is used to encrypt and decrypt the key so that an attacker needs both the private key file <strong>and</strong> the password to be able to decrypt files.</p>
+<h1 id="installation-and-how-it-works">Installation and how it works</h1>
+<p>Please have a look at the <a href="https://github.com/va1entin/plasm/blob/master/README.md">README</a> to find out how to use plasm.</p>
+<p>Plasm is currently not available via PyPi, but you can install it directly from Github as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://github.com/va1entin/plasm/-/archive/master/plasm-master.zip
 unzip plasm-master.zip
-<span class=nb>cd</span> plasm-master
+<span class="nb">cd</span> plasm-master
 pip install .
-</code></pre></div><h1 id=integration-with-motioneye>Integration with motionEye</h1><p>The integration with motionEye currently requires a little patch to be applied to it&rsquo;s <code>uploadservices.py</code>, which is located at <code>/usr/local/lib/python2.7/dist-packages/motioneye/uploadservices.py</code> on Raspbian. You can download it directly <a href=https://github.com/va1entin/plasm/raw/master/integrations/motioneye-uploadservices.patch>here</a> (right click -> save as).
-Make sure to change the path to your public key accordingly and add <code>remove_input_file=True</code> as shown in the <a href=https://github.com/va1entin/plasm/blob/master/README.md>README</a>, if you want plasm to remove the unencrypted input file once encryption is finished.
-Plasm also logs what it&rsquo;s doing using the logging module by default. Most logging happens at debug log level currently. Have a look at the <a href=https://github.com/ccrisan/motioneye/wiki/Configuration-File>motionEye wiki</a> to find out how to enable debug logging.</p><h1 id=conclusion>Conclusion</h1><p>Plasm is licensed under the Apache 2.0 License. Feel free to report issues or create merge requests at <a href=https://github.com/va1entin/plasm>Github</a>. Please note that I don&rsquo;t plan to extend plasm&rsquo;s scope on other use cases at the moment to keep it as simple as possible. If plasm doesn&rsquo;t fit the scope of what you want to do, feel free to have a look at <a href=https://pynacl.readthedocs.io>pynacl&rsquo;s documentation</a> and use it directly.</p><br></div></div></div></article><hr><footer><div class=container><div class=row><div class="col-lg-8 col-md-10 mx-auto"><ul class="list-inline text-center"><li class=list-inline-item><a href=/feed.xml target=_blank><span class="fa-stack fa-lg"><i class="far fa-circle fa-stack-2x"></i>
-<i class="fa fa-rss fa-stack-1x"></i></span></a></li><li class=list-inline-item><a href=https://github.com/va1entin target=_blank><span class="fa-stack fa-lg"><i class="far fa-circle fa-stack-2x"></i>
-<i class="fab fa-github fa-stack-1x"></i></span></a></li><li class=list-inline-item><a href=https://gitlab.com/va1entin target=_blank><span class="fa-stack fa-lg"><i class="far fa-circle fa-stack-2x"></i>
-<i class="fab fa-gitlab fa-stack-1x"></i></span></a></li><li class=list-inline-item><a href=https://www.linkedin.com/in/valentin-heidelberger-251769102 target=_blank><span class="fa-stack fa-lg"><i class="far fa-circle fa-stack-2x"></i>
-<i class="fab fa-linkedin fa-stack-1x"></i></span></a></li><li class=list-inline-item><a href=https://www.xing.com/profile/Valentin_Heidelberger target=_blank><span class="fa-stack fa-lg"><i class="far fa-circle fa-stack-2x"></i>
-<i class="fab fa-xing fa-stack-1x"></i></span></a></li><p class="copyright text-muted"><br><br><a rel=license href=http://creativecommons.org/licenses/by/4.0/ target=_blank>CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2021<br>This applies to the contents of my blog and other texts on this site only.<br><a href=/terms-of-use>Terms of use</a><br>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a></p></ul><br><br></div></div></div></footer><script src=https://code.jquery.com/jquery-3.5.1.min.js></script><script src=https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js></script><script src=/js/scripts.js></script></body></html>
+</code></pre></div><h1 id="integration-with-motioneye">Integration with motionEye</h1>
+<p>The integration with motionEye currently requires a little patch to be applied to it&rsquo;s <code>uploadservices.py</code>, which is located at <code>/usr/local/lib/python2.7/dist-packages/motioneye/uploadservices.py</code> on Raspbian. You can download it directly <a href="https://github.com/va1entin/plasm/raw/master/integrations/motioneye-uploadservices.patch">here</a> (right click -&gt; save as).
+Make sure to change the path to your public key accordingly and add <code>remove_input_file=True</code> as shown in the <a href="https://github.com/va1entin/plasm/blob/master/README.md">README</a>, if you want plasm to remove the unencrypted input file once encryption is finished.
+Plasm also logs what it&rsquo;s doing using the logging module by default. Most logging happens at debug log level currently. Have a look at the <a href="https://github.com/ccrisan/motioneye/wiki/Configuration-File">motionEye wiki</a> to find out how to enable debug logging.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Plasm is licensed under the Apache 2.0 License. Feel free to report issues or create merge requests at <a href="https://github.com/va1entin/plasm">Github</a>. Please note that I don&rsquo;t plan to extend plasm&rsquo;s scope on other use cases at the moment to keep it as simple as possible. If plasm doesn&rsquo;t fit the scope of what you want to do, feel free to have a look at <a href="https://pynacl.readthedocs.io">pynacl&rsquo;s documentation</a> and use it directly.</p>
+
+        <br>
+      </div>
+    </div>
+  </div>
+</article>
+
+  <hr>
+  
+<footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            <li class="list-inline-item">
+              <a href="/feed.xml" target="_blank">
+                  <span class="fa-stack fa-lg">
+                      <i class="far fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-rss fa-stack-1x"></i>
+                  </span>
+              </a>
+            </li>
+            
+            
+            <li class="list-inline-item">
+              <a href="https://github.com/va1entin" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="far fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x"></i>
+                </span>
+              </a>
+            </li>
+            
+            
+          <li class="list-inline-item">
+            <a href="https://gitlab.com/va1entin" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-gitlab fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-linkedin fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-xing fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          <p class="copyright text-muted">
+          
+              <br>
+              <br>
+              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2021
+              <br>
+              This applies to the contents of my blog and other texts on this site only.
+              <br>
+              <a href="/terms-of-use">Terms of use</a>
+              <br>
+              Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+          
+          </p>
+          </ul>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="/js/scripts.js"></script>
+</body>
+</html>
