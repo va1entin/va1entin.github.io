@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blog</title><link>https://valh.io/</link><description>Recent content on Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 02 Mar 2021 15:53:11 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Python cheat sheet for InfluxDB2 (influxdb_client)</title><link>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</link><pubDate>Tue, 02 Mar 2021 15:53:11 +0000</pubDate><guid>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</guid><description>
+&lt;h1 id="setup-influxdb-test-instance-with-docker">Setup InfluxDB test instance with Docker&lt;/h1>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">docker run -d -p 8086:8086 --name influxdb influxdb
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command pulls the latest InfluxDB image from Docker Hub, runs it with the name &lt;code>influxdb&lt;/code> and makes the default port &lt;code>8086&lt;/code> available on &lt;code>localhost&lt;/code>.
+Once the container is up and running, we need to setup InfluxDB before we can use it.&lt;/p>
+&lt;p>Open a shell in the InfluxDB container:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">docker &lt;span class="nb">exec&lt;/span> -it influxdb bash
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Start the interactive setup wizard by running &lt;code>influx setup&lt;/code>.
+The wizard will ask you to provide initial admin credentials, your first organization, your first bucket and a retention period for it.&lt;/p>
+&lt;p>I have created a user &lt;code>val&lt;/code> with a password (invisible in the wizard), an organization called &lt;code>my_org&lt;/code> and a bucket &lt;code>my_bucket&lt;/code>:&lt;/p>
+&lt;pre>&lt;code>root@d8818fce8c18:/# influx setup
+Welcome to InfluxDB 2.0!
+Please type your primary username: val
+Please type your password:
+Please type your password again:
+Please type your primary organization name: my_org
+Please type your primary bucket name: my_bucket
+Please type your retention period in hours.
+Or press ENTER for infinite.:
+&lt;/code>&lt;/pre>&lt;p>Lastly, the wizard will ask you to confirm your inputs:&lt;/p>
+&lt;pre>&lt;code>You have entered:
+Username: val
+Organization: my_org
+Bucket: my_bucket
+Retention Period: infinite
+Confirm? (y/n): y
+Config default has been stored in /root/.influxdbv2/configs.
+User Organization Bucket
+val my_org my_bucket
+&lt;/code>&lt;/pre>&lt;p>One advantage of performing the setup using the CLI is that it writes your initial admin user&amp;rsquo;s credentials to a config file, allowing you to manage your InfluxDB instance using the &lt;code>influx&lt;/code> CLI directly with admin privileges.&lt;/p>
+&lt;p>We&amp;rsquo;ll use this to get our initial admin user&amp;rsquo;s token, which we&amp;rsquo;ll use later to set up the connection to InfluxDB in Python.&lt;/p>
+&lt;p>&lt;code>influx auth list&lt;/code> gives us a list of existing users and tokens. For the sake of readability I&amp;rsquo;m using &lt;code>awk&lt;/code> to limit output to just the token.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">root@d8818fce8c18:/# influx auth list &lt;span class="p">|&lt;/span> awk &lt;span class="s1">&amp;#39;FNR&amp;gt;1 {print $4}&amp;#39;&lt;/span>
+&lt;span class="nv">_U13AGG9YWojXjuh2OAUKqtsA20Fual8Vt_aVTvdJ1eWUJu0pH85ppkCEM3lL5hEpNS_8vPRh7nik8QkEvfZFA&lt;/span>&lt;span class="o">==&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Save your token somewhere to have it at hand for the &lt;a href="#connection-setup">Connection setup&lt;/a> step.&lt;/p>
+&lt;p>Now, we can exit the container shell:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">root@d8818fce8c18:/# &lt;span class="nb">exit&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="install-influxdb_client-with-pip">Install influxdb_client with pip&lt;/h1>
+&lt;p>Depending on your setup and linux distro you might want to do this with the distro&amp;rsquo;s package manager.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">pip3 install influxdb-client &lt;span class="c1"># NOT &amp;#39;influx-client&amp;#39; or &amp;#39;influxdb&amp;#39;!&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="connection-setup-required-for-all-steps-below">Connection setup (required for all steps below)&lt;/h1>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="kn">import&lt;/span> &lt;span class="nn">influxdb_client&lt;/span>
+&lt;span class="n">my_client&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">InfluxDBClient&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="n">url&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">my_url&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">my_token&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">org&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>To connect to the docker test instance, use the token obtained after the &lt;a href="#setup-influxdb-test-instance-with-docker">InfluxDB setup&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="kn">import&lt;/span> &lt;span class="nn">influxdb_client&lt;/span>
+&lt;span class="n">my_client&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">InfluxDBClient&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="n">url&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;http://localhost:8086&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">token&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;_U13AGG9YWojXjuh2OAUKqtsA20Fual8Vt_aVTvdJ1eWUJu0pH85ppkCEM3lL5hEpNS_8vPRh7nik8QkEvfZFA==&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">org&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="test-connection">Test connection&lt;/h1>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">my_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ready&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;started&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">2021&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">23&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">16&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">29&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">916723&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">tzinfo&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">tzlocal&lt;/span>&lt;span class="p">()),&lt;/span>
+&lt;span class="s1">&amp;#39;status&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;ready&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;up&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;47m11.068245257s&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="query-data">Query data&lt;/h1>
+&lt;br>
+&lt;h2 id="get-query-api">Get query api&lt;/h2>
+&lt;p>Firstly, obtain a query API instance:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_query_api&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">my_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">query_api&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="create-a-query">Create a query&lt;/h2>
+&lt;p>Check out the official &lt;a href="https://docs.influxdata.com/influxdb/v2.0/query-data/get-started/">documentation&lt;/a> for the Flux query language to learn how to build queries.&lt;/p>
+&lt;p>This is a very basic example getting all data points of the measurement &lt;code>my_measurement&lt;/code> from the last 100 minutes in &lt;code>my_bucket&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">query&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;from(bucket:&amp;#34;my_bucket&amp;#34;)&lt;/span>&lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>&lt;span class="s1">|&amp;gt; range(start: -100m)&lt;/span>&lt;span class="se">\
+&lt;/span>&lt;span class="se">&lt;/span>&lt;span class="s1">|&amp;gt; filter(fn:(r) =&amp;gt; r._measurement == &amp;#34;my_measurement&amp;#34;)&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="run-a-query">Run a query&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_query_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">query&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">org&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">query&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">query&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>See the official &lt;a href="https://docs.influxdata.com/influxdb/cloud/tools/client-libraries/python/#query-data-from-influxdb-with-python">InfluxDB documentation&lt;/a> for ways to use the result data including an example script.&lt;/p>
+&lt;br>
+&lt;h2 id="get-dict-from-data-point">Get dict from data point&lt;/h2>
+&lt;p>For this example I have created a data point as shown &lt;a href="#write-a-data-point">here&lt;/a>.&lt;/p>
+&lt;p>Assuming you have a &lt;code>influxdb_client.Point&lt;/code> object, a dict representation of it&amp;rsquo;s contents can be obtained like so:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">point&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="vm">__dict__&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will look something like this:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;_tags&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;my_tag&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_value&amp;#39;&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="s1">&amp;#39;_fields&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;my_first_field&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my second field value&amp;#39;&lt;/span>&lt;span class="p">},&lt;/span> &lt;span class="s1">&amp;#39;_name&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_measurement&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;_time&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">2021&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">13&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">54&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">7&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">692337&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="s1">&amp;#39;_write_precision&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;ms&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="write-data">Write data&lt;/h1>
+&lt;br>
+&lt;h2 id="get-write-api">Get write api&lt;/h2>
+&lt;p>You need to specify which &lt;code>write option&lt;/code> the client shall use when creating the instance.
+At the time of writing this post the possible write options are: synchronous, asynchronous, batching&lt;/p>
+&lt;p>There are shortcuts for &lt;code>synchronous&lt;/code> and &lt;code>asynchronous&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SYNCHRONOUS&lt;/span>
+&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ASYNCHRONOUS&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>batching&lt;/code> is accessible by creating an &lt;code>WriteOptions&lt;/code> instance and passing it the &lt;code>WriteType&lt;/code> of &lt;code>batching&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">WriteOptions&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">WriteType&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">batching&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Using the &lt;code>write option&lt;/code>, that you&amp;rsquo;ve decided for, you can get a &lt;code>write api&lt;/code> instance:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_write_api&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">my_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">write_options&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SYNCHRONOUS&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="write-a-data-point">Write a data point&lt;/h2>
+&lt;p>A data point is created from an &lt;code>influxdb_client.Point&lt;/code> object. To put our data in, we can either:&lt;/p>
+&lt;ul>
+&lt;li>use various functions of the Point object itself&lt;/li>
+&lt;li>pass it a dict&lt;/li>
+&lt;/ul>
+&lt;p>I prefer using a dict, because I think it&amp;rsquo;s much more readable and easy to understand. This might be especially useful for people who know Python but are not perfectly familiar with how &lt;code>influxdb_client.Point&lt;/code> objects work in detail.&lt;/p>
+&lt;p>&lt;code>my_time&lt;/code> must be a timestamp, that InfluxDB understands.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">point&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Point&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_dict&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">{&lt;/span>
+&lt;span class="s1">&amp;#39;measurement&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_measurement&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;tags&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;my_tag&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_value&amp;#39;&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="s1">&amp;#39;fields&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="s1">&amp;#39;my_first_field&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my first field value&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;my_first_field&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my second field value&amp;#39;&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="s1">&amp;#39;time&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_time&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">WritePrecision&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MS&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="n">influxdb_write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;my_bucket&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">point&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>For example, you can use the &lt;code>datetime&lt;/code> module:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="kn">import&lt;/span> &lt;span class="nn">datetime&lt;/span>
+&lt;span class="n">point&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Point&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">from_dict&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="p">{&lt;/span>
+&lt;span class="s1">&amp;#39;measurement&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_measurement&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;tags&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;my_tag&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my_value&amp;#39;&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="s1">&amp;#39;fields&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="s1">&amp;#39;my_first_field&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my first field value&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s1">&amp;#39;my_first_field&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;my second field value&amp;#39;&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="s1">&amp;#39;time&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">datetime&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">now&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">WritePrecision&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">MS&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="n">influxdb_write_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;my_bucket&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">point&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="buckets">Buckets&lt;/h1>
+&lt;p>Firstly, obtain a buckets API instance:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_buckets_api&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">my_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">buckets_api&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="get-all-buckets-in-current-org">Get all buckets in current org&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">bucket_objects&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_buckets&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="get-all-bucket-names-in-current-org">Get all bucket names in current org&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">bucket_objects&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_buckets&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="n">bucket_names&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">bucket&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">bucket_objects&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">buckets&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="get-bucket-object-by-bucket-name">Get bucket object by bucket name&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">my_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_bucket_by_name&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;my_bucket&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="create-bucket">Create bucket&lt;/h2>
+&lt;p>See &lt;a href="#get-org-id">this section&lt;/a> for getting &lt;code>my_org_id&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">new_bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">domain&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Bucket&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="n">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;my_new_bucket&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">retention_rules&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[],&lt;/span>
+&lt;span class="n">org_id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">my_org_id&lt;/span>
+&lt;span class="p">)&lt;/span>
+&lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create_bucket&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">new_bucket&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="delete-bucket">Delete bucket&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">bucket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_bucket_by_name&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;my_bucket&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">influxdb_buckets_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">delete_bucket&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bucket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;hr>
+&lt;br>
+&lt;h1 id="organizations">Organizations&lt;/h1>
+&lt;p>Firstly, obtain a organizations API instance:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_org_api&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_client&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">OrganizationsApi&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">my_client&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="get-all-organizations">Get all organizations&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">orgs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">influxdb_org_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">find_organizations&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="get-organization-id">Get organization id&lt;/h2>
+&lt;p>Look for your organization in the list of all organizations &lt;code>orgs&lt;/code>, which you obtained in the previous step.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="k">for&lt;/span> &lt;span class="n">org&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">orgs&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="n">org&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">name&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;my_org&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="n">my_org_id&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">org&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">id&lt;/span>
+&lt;span class="k">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">my_org_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="create-organization">Create organization&lt;/h2>
+&lt;p>&lt;code>my_new_org&lt;/code> will be the new organization&amp;rsquo;s name.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_org_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create_organization&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;my_new_org&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br>
+&lt;h2 id="delete-organization">Delete organization&lt;/h2>
+&lt;p>To delete an organization, you need it&amp;rsquo;s ID. See &lt;a href="#get-organization-id">Get organization id&lt;/a>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="n">influxdb_org_api&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">delete_organization&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">my_org_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;br></description></item><item><title>Talk: How SUSE migrated 200k user accounts to UCS</title><link>https://valh.io/p/talk-how-suse-migrated-200k-user-accounts-to-ucs/</link><pubDate>Tue, 16 Feb 2021 17:50:56 +0000</pubDate><guid>https://valh.io/p/talk-how-suse-migrated-200k-user-accounts-to-ucs/</guid><description>
+&lt;p>During my time as a Consultant &amp;amp; Engineer with &lt;a href="https://univention.com">Univention&lt;/a>, I supported Daniel Schmidt and his colleagues at &lt;a href="https://suse.com">SUSE&lt;/a> in their migration of 200k user accounts from a legacy identity management to &lt;a href="https://univention.com">Univention Corporate Server&lt;/a> (UCS).&lt;/p>
+&lt;p>It was a live migration over the course of weekend and I provided technical consulting as well as live patches and enhancements to UCS for issues and areas of improvements which were found during the migration.&lt;/p>
+&lt;p>During this year&amp;rsquo;s virtual Univention Summit, Daniel presented that story in a &lt;a href="https://www.youtube.com/watch?v=q-NY9JCz6VA">talk&lt;/a> which I&amp;rsquo;d like to share with you. The talk is in German and - at this point - has no English subtitles.&lt;/p>
+&lt;p>Thanks a lot for the kudos @18:11 to you, Daniel! :)&lt;/p>
+&lt;p>I&amp;rsquo;ve had a great time working with you and your team. Best wishes from Bremen!&lt;/p>
+&lt;iframe width="100%" height="315" src="https://www.youtube.com/embed/q-NY9JCz6VA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>&lt;/iframe></description></item><item><title>Python script for Cloudflare DNS record updates (DynDNS)</title><link>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</link><pubDate>Sat, 06 Feb 2021 15:53:11 +0000</pubDate><guid>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</guid><description>
+&lt;p>&lt;strong>Note:&lt;/strong> This is an update to a post from 2019 and features a rewrite in Python with various new features including IPv6 support, logging, argument parser, &amp;hellip;&lt;/p>
+&lt;h1 id="why">Why&lt;/h1>
+&lt;p>I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain registrar. For a system with an external IPv4 address that changes daily I needed a way to dynamically update a DNS record at Cloudflare with the system&amp;rsquo;s current external IP address.&lt;/p>
+&lt;p>There are numerous ways to do DynDNS but I wanted to get into Cloudflare&amp;rsquo;s API anyway and it turns out that this is, at least in my opinion, much easier to set up than some generic DynDNS package.&lt;/p>
+&lt;h1 id="how">How&lt;/h1>
+&lt;h2 id="getting-the-script">Getting the script&lt;/h2>
+&lt;p>I&amp;rsquo;ve written a Python script, based on a bash script by &lt;a href="https://gist.github.com/benkulbertis/fff10759c2391b6618dd">benkulbertis&lt;/a>.&lt;/p>
+&lt;p>The Python script does &lt;em>not&lt;/em> require a general API token. So you can set up API tokens specifically authorized for what the script needs to do.&lt;/p>
+&lt;p>You can get the script &lt;a href="https://github.com/va1entin/tools/blob/master/cloudflare-update-record/cloudflare-update-record.py">here&lt;/a>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare-update-record/cloudflare-update-record.py
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="setting-up-api-tokens">Setting up API tokens&lt;/h2>
+&lt;p>The script needs two tokens:&lt;/p>
+&lt;ul>
+&lt;li>one to read DNS records and settings&lt;/li>
+&lt;li>one to actually edit a DNS zone&lt;/li>
+&lt;/ul>
+&lt;p>To set the tokens up, log in to your Cloudflare account and go to &lt;a href="https://dash.cloudflare.com/profile/api-tokens">this page&lt;/a>.&lt;/p>
+&lt;p>&lt;strong>Note&lt;/strong>, that you can also limit the tokens to a specific domain! This is of course important to know if you have multiple domains in your Cloudflare account and the script shall only read/edit the settings of one of these.&lt;/p>
+&lt;h3 id="edit-token">Edit token&lt;/h3>
+&lt;p>On the &lt;a href="https://dash.cloudflare.com/profile/api-tokens">API token page&lt;/a>, click &lt;strong>Create Token&lt;/strong> and use the template &lt;strong>Edit zone DNS&lt;/strong>.&lt;/p>
+&lt;p>Alternatively, click &lt;strong>Get started&lt;/strong> next to &lt;strong>Create Custom Token&lt;/strong> and configure the token as follows:&lt;/p>
+&lt;table class="table table-striped table-bordered">
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Resource&lt;/th>
+&lt;th>Permission&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Zone&lt;/td>
+&lt;td>DNS&lt;/td>
+&lt;td>Edit&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Click &lt;a href="https://valh.io/img/posts/cloudflare_edit_token.webp">here&lt;/a> for a screenshot.&lt;/p>
+&lt;h3 id="read-token">Read token&lt;/h3>
+&lt;p>On the &lt;a href="https://dash.cloudflare.com/profile/api-tokens">API token page&lt;/a>, click &lt;strong>Create Token&lt;/strong> and click &lt;strong>Get started&lt;/strong> next to &lt;strong>Create Custom Token&lt;/strong>.&lt;/p>
+&lt;table class="table table-striped table-bordered">
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Resource&lt;/th>
+&lt;th>Permission&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Zone&lt;/td>
+&lt;td>DNS&lt;/td>
+&lt;td>Read&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Click &lt;a href="https://valh.io/img/posts/cloudflare_read_token.webp">here&lt;/a> for a screenshot.&lt;/p>
+&lt;h2 id="create-config-file">Create config file&lt;/h2>
+&lt;p>The script uses a YAML-format config file and assumes it at &lt;code>./cloudflare-update-record_config.yaml&lt;/code>. You can give a different path using the &lt;code>-c | --config&lt;/code> parameter.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">read_token&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;lt;YOUR READ TOKEN&amp;gt;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">edit_token&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;lt;YOUR EDIT TOKEN&amp;gt;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">zone_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;lt;YOUR ZONE NAME&amp;gt;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">record_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;&amp;lt;YOUR RECORD NAME&amp;gt;&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>So if I wanted to change a DNS record called &lt;em>hello.example.com&lt;/em> using a read token &lt;em>foo&lt;/em> and an edit token &lt;em>bar&lt;/em>, the config would look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">read_token&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;foo&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">edit_token&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;bar&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">zone_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;example.com&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;span class="w">&lt;/span>&lt;span class="nt">record_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;hello.example.com&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="run-script">Run script&lt;/h2>
+&lt;p>Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">./cloudflare-update-record.py -h
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="logging">Logging&lt;/h3>
+&lt;p>The scripts logs to &lt;code>cloudflare-update-record.log&lt;/code> with log level &lt;code>info&lt;/code> by default. You can change the log file and log level, see &lt;code>-h&lt;/code>.&lt;/p>
+&lt;h3 id="ip-provider">IP provider&lt;/h3>
+&lt;p>It gets the external IP address from a &lt;em>provider&lt;/em>, by default: &lt;a href="https://icanhazip.com">icanhazip.com&lt;/a>&lt;/p>
+&lt;p>You can specify a different provider, see &lt;code>-h&lt;/code>.
+The provider must return &lt;strong>just the IP address as plain text&lt;/strong> on a &lt;code>HTTP GET&lt;/code> request - no additional HTML or anything else. Assuming an external IPv4 address &lt;code>1.1.1.1&lt;/code>, it should look like this, when tested with curl:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="c1"># curl https://ipv4.icanhazip.com&lt;/span>
+1.1.1.1
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="update-a-dns-a-ipv4-record">Update a DNS A (IPv4) record&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">cloudflare-update-record.py -4
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="update-a-dns-aaaa-ipv6-record">Update a DNS AAAA (IPv6) record&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">cloudflare-update-record.py -6
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Check the log for a message &lt;code>INFO: DNS A record update succeeded, IP changed to: &amp;lt;YOUR IP ADDRESS&amp;gt;&lt;/code>
+and remember that it might take up to 24 hours for your DNS update to be propagated around the world.&lt;/p></description></item><item><title>Simple CLI audio metadata editor: tag_dat.py</title><link>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</link><pubDate>Sat, 05 Dec 2020 17:11:08 +0000</pubDate><guid>https://valh.io/p/simple-cli-audio-metadata-editor-tag_dat.py/</guid><description>
+&lt;p>Audio metadata is often not particularly easy to manage in a simple and quick manner. There&amp;rsquo;s lots of tools providing this feature but many of them have a ton of other additional functionality or are full-on music library managers. I wanted a very simple command-line tool to quickly change the title, artist and album tags of audio metadata - the result is &amp;ldquo;tag_dat.py&amp;rdquo; and available in my &lt;a href="https://github.com/va1entin/tools/tree/master/tag_dat">tools repository&lt;/a>.&lt;/p>
+&lt;p>tag_dat.py iterates over a file or all files in a given path (default: current path), sets the filename (without file ending) as &lt;em>title&lt;/em> and given arguments &lt;em>album&lt;/em> and &lt;em>artist&lt;/em> as audio tags. The script uses the amazing &amp;ldquo;mutagen&amp;rdquo; library under the hood.&lt;/p>
+&lt;p>Here are a few usage examples:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="c1"># Set MyArtist and MyAlbum for all files in current path&lt;/span>
+./tag_dat.py -ar MyArtist -al MyAlbum
+&lt;span class="c1"># Set MyArtist and MyAlbum for my_file.mp3&lt;/span>
+./tag_dat.py -ar MyArtist -al MyAlbum -f my_file.mp3
+&lt;span class="c1"># Set MyArtist and MyAlbum for all files in path music/MyAlbum/&lt;/span>
+./tag_dat.py -ar MyArtist -al MyAlbum -p music/MyAlbum/
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Get Ledger Live working on NixOS</title><link>https://valh.io/p/get-ledger-live-working-on-nixos/</link><pubDate>Thu, 14 Nov 2019 18:21:22 +0000</pubDate><guid>https://valh.io/p/get-ledger-live-working-on-nixos/</guid><description>
+&lt;p>The &lt;a href="https://ledger.com">Ledger Nano series&lt;/a> are hardware wallets for crypto currencies. They&amp;rsquo;re managed through an application called &lt;a href="https://shop.ledger.com/pages/ledger-live">Ledger Live&lt;/a>. Ledger Live runs on linux but might - depending on your distro - require some adjustments in order to correctly identify the device via USB.
+I couldn&amp;rsquo;t test whether this config works with all Ledger devices so far. Feel free to drop me a &lt;a href="https://twitter.com/valhei">tweet&lt;/a> if you have anything to add to this post and I&amp;rsquo;ll gladly update it.&lt;/p>
+&lt;p>On NixOS I needed the following additional config snippets to use my Ledger fully:&lt;/p>
+&lt;h1 id="define-a-group-called-plugdev">Define a group called &amp;ldquo;plugdev&amp;rdquo;&lt;/h1>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-nix" data-lang="nix">&lt;span class="n">groups&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plugdev&lt;/span> &lt;span class="err">=&lt;/span> &lt;span class="p">{};&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="add-users-to-plugdev">Add user(s) to &amp;ldquo;plugdev&amp;rdquo;&lt;/h1>
+&lt;p>Note that you your user will most likely already be in various other groups such as &lt;em>networkmanager&lt;/em> or &lt;em>wheel&lt;/em>. Just append plugdev to the &lt;em>extraGroups&lt;/em> list.
+Replace &lt;em>myUser&lt;/em> with your user name.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-nix" data-lang="nix">&lt;span class="n">users&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">users&lt;/span> &lt;span class="err">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="n">myUser&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">extraGroups&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="s2">&amp;#34;plugdev&amp;#34;&lt;/span> &lt;span class="p">];&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="p">};&lt;/span>
+&lt;span class="p">};&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="add-extra-rules-for-udev">Add extra rules for udev&lt;/h1>
+&lt;p>Ledger provides udev rules which need to be added kind of hidden (linux -&amp;gt; Troubleshooting -&amp;gt; Option 3) &lt;a href="https://support.ledger.com/hc/en-us/articles/115005165269-Fix-connection-issues">on their website&lt;/a>. You can check out my NixOS config containing these rules &lt;a href="https://github.com/va1entin/nixos-config/blob/master/ledger.nix">on GitHub&lt;/a>. I&amp;rsquo;ve decided to not statically post them here and instead refer to the GitHub mirror of my NixOS config, because they might change with Ledger firmware updates. You must change &amp;ldquo;val&amp;rdquo; to your username.&lt;/p>
+&lt;p>I&amp;rsquo;m not entirely sure whether it&amp;rsquo;s really necessary but I reload the rules after I&amp;rsquo;ve changed them and rebuilt NixOS just to make sure they are being applied:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">udevadm trigger
+udevadm control --reload-rules
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Providing access to thousands of external storages using Nextcloud</title><link>https://valh.io/p/providing-access-to-thousands-of-external-storages-using-nextcloud/</link><pubDate>Mon, 28 Oct 2019 18:41:14 +0000</pubDate><guid>https://valh.io/p/providing-access-to-thousands-of-external-storages-using-nextcloud/</guid><description>
+&lt;p>A few weeks ago I&amp;rsquo;ve held a talk involving a solution I&amp;rsquo;ve built @&lt;a href="https://univention.com">univention&lt;/a> for a customer using Univention Corporate Server and Nextcloud at this year&amp;rsquo;s Nextcloud conference.&lt;/p>
+&lt;p>The talk is available &lt;a href="https://www.youtube.com/watch?v=ZjLiSL_XYvs&amp;amp;t=1766">on YouTube&lt;/a>.&lt;/p>
+&lt;p>The documentation for the cool solution I&amp;rsquo;m referring to in the talk can be found in the &lt;a href="https://help.univention.com/t/cool-solution-mount-samba-shares-in-nextcloud/">Univention Knowledge Base&lt;/a>.&lt;/p>
+&lt;p>Thanks a lot to the folks at Nextcloud and especially &lt;a href="https://twitter.com/nlapalice">Nina&lt;/a> and &lt;a href="https://twitter.com/jospoortvliet">Jos&lt;/a> for the invitation and great discussions!&lt;/p>
+&lt;iframe width="100%" height="315" src="https://www.youtube.com/embed/ZjLiSL_XYvs?start=1766" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>&lt;/iframe></description></item><item><title>Nextcloud for UCS now comes with SSO out of the box</title><link>https://valh.io/p/nextcloud-for-ucs-now-comes-with-sso-out-of-the-box/</link><pubDate>Sun, 29 Sep 2019 13:42:20 +0000</pubDate><guid>https://valh.io/p/nextcloud-for-ucs-now-comes-with-sso-out-of-the-box/</guid><description>
+&lt;p>A few weeks ago I&amp;rsquo;ve held a talk involving a solution I built @&lt;a href="https://univention.com">univention&lt;/a> for a customer using Univention Corporate Server and Nextcloud at this year&amp;rsquo;s Nextcloud conference. The video of that will probably be available in the next few weeks and I&amp;rsquo;ll share it here once it&amp;rsquo;s available.&lt;/p>
+&lt;p>UPDATE: See &lt;a href="https://valh.io/blog/Nextcloud-conference-2019.html">here&lt;/a> for the video of the talk.&lt;/p>
+&lt;p>Another interesting thing regarding Nextcloud and UCS happened in the meantime though: The &lt;a href="https://www.univention.com/products/univention-app-center/app-catalog/nextcloud/">Nextcloud app for UCS&lt;/a> now comes with pre-configured Single Sign-On (SSO) using SAML. This is very cool because lots of our customers want to make use of SSO but the configuration is not always trivial. Using a &lt;a href="https://www.univention.com/blog-en/2019/02/how-to-single-sign-on-for-nextcloud/">blog post&lt;/a> I wrote for the Univention blog in February, Nextcloud, namely Arthur Schiwon aka @&lt;a href="https://github.com/blizzz">blizzz&lt;/a>, were able to &lt;a href="https://github.com/nextcloud/univention-app/issues/91">bake the configuration&lt;/a> into the app and thus make it really easy for people to get started with UCS, Nextcloud and SSO! If you&amp;rsquo;d like to find out more about SSO with SAML, feel free to check out my &lt;a href="https://www.univention.com/blog-en/2019/06/brief-introduction-saml-a-secure-comfortable-web-access/">blog post&lt;/a> about it.&lt;/p></description></item><item><title>Raspberry Pi: Configure WLAN/WiFi + SSH before first boot</title><link>https://valh.io/p/raspberry-pi-configure-wlan/wifi-ssh-before-first-boot/</link><pubDate>Mon, 10 Sep 2018 19:31:23 +0000</pubDate><guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi-ssh-before-first-boot/</guid><description>
+&lt;h1 id="why">Why&lt;/h1>
+&lt;p>Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&amp;rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&amp;rsquo;s how that works.&lt;/p>
+&lt;h1 id="how">How&lt;/h1>
+&lt;p>&lt;strong>Having flashed the Raspbian image onto your Pi&lt;/strong>, use your file explorer or terminal to move to a newly created partition called &lt;strong>&amp;ldquo;boot&amp;rdquo;&lt;/strong> on the micro SD card. Create a file called &lt;strong>wpa_supplicant.conf&lt;/strong> in the root of that partition and paste the following contents in there. Change the &lt;em>country&lt;/em> parameter as well as the &lt;em>ssid&lt;/em> and &lt;em>psk&lt;/em> accordingly and save the file:&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+network={
+ssid=&amp;quot;Your network name/SSID&amp;quot;
+psk=&amp;quot;Your WPA/WPA2 security key&amp;quot;
+key_mgmt=WPA-PSK
+}
+&lt;/code>&lt;/pre>&lt;p>Having created the config for WLAN, create another (empty) file simply called &lt;strong>ssh&lt;/strong> in the &lt;strong>&amp;ldquo;boot&amp;rdquo;&lt;/strong> partition. If you&amp;rsquo;re on Windows, make sure that both &lt;strong>ssh&lt;/strong> and &lt;strong>wpa_supplicant.conf&lt;/strong> don&amp;rsquo;t have any other extension such as &lt;em>.txt&lt;/em>.&lt;/p>
+&lt;p>Once the files are saved, eject the SD card safely, put it in your Pi and boot it up. You should be able to connect via SSH using the default user &lt;em>pi&lt;/em> and password &lt;em>raspberry&lt;/em> shortly after.&lt;/p></description></item><item><title>Simple file encryption module for Python projects</title><link>https://valh.io/p/simple-file-encryption-module-for-python-projects/</link><pubDate>Sat, 08 Sep 2018 11:40:23 +0000</pubDate><guid>https://valh.io/p/simple-file-encryption-module-for-python-projects/</guid><description>
+&lt;h1 id="tldr">tl;dr&lt;/h1>
+&lt;p>Plasm focuses on a very specific use case: encrypting and decrypting files using public key encryption. If plasm doesn&amp;rsquo;t fit the scope of what you want to do, feel free to have a look at &lt;a href="https://pynacl.readthedocs.io">pynacl&amp;rsquo;s documentation&lt;/a> and use it directly.&lt;/p>
+&lt;h1 id="why">Why&lt;/h1>
+&lt;p>I have experimented a lot with camera software for the Raspberry Pi. One project that particularly stuck with me is &lt;a href="https://github.com/ccrisan/motioneye">motionEye&lt;/a>, a web frontend for the motion daemon, which allows you to easily set up an open source motion triggered camera for about 50€. MotionEye also offers a cloud upload functionality, which I like a lot. Unfortunately it doesn&amp;rsquo;t allow the user to encrypt their media files before uploading them. Since I wanted to use Google Drive as my data grave but at the same time not upload unencrypted media files into the cloud, I decided to build a simple python module to easily hack file encryption into motionEye.&lt;/p>
+&lt;h1 id="what-it-is">What it is&lt;/h1>
+&lt;p>The result of this is &lt;a href="https://github.com/va1entin/plasm">plasm&lt;/a>, which stands for &lt;code>PynacL AbStraction Module&lt;/code>. Plasm is based on &lt;a href="https://github.com/pyca/pynacl">pynacl&lt;/a>, which in turn binds to &lt;a href="https://libsodium.org">libsodium&lt;/a>.
+Plasm uses public key encryption and is supposed to make the &lt;strong>creation of public key pairs&lt;/strong> as well as &lt;strong>encryption and decryption of files&lt;/strong> very simple.
+One key requirement for me was that plasm had to be able to encrypt using only a public key. The private key, which is required to decrypt, shouldn&amp;rsquo;t be required so that I could store it in a safe place on another device. To accomplish this, I chose to use the &lt;code>sealedBox&lt;/code> construct, because it only requires a public key. The main difference of the &lt;code>sealedBox&lt;/code> compared to another construct simply called &lt;code>Box&lt;/code> is that it doesn&amp;rsquo;t offer cryptographic proof of the sender’s authorship, which is out of scope for plasm anyway.
+Additionally, I wanted to protect the private key by encrypting it as well using secret key encryption. That&amp;rsquo;s why plasm requires a password for creating a key pair and decrypting files. The password is used to encrypt and decrypt the key so that an attacker needs both the private key file &lt;strong>and&lt;/strong> the password to be able to decrypt files.&lt;/p>
+&lt;h1 id="installation-and-how-it-works">Installation and how it works&lt;/h1>
+&lt;p>Please have a look at the &lt;a href="https://github.com/va1entin/plasm/blob/master/README.md">README&lt;/a> to find out how to use plasm.&lt;/p>
+&lt;p>Plasm is currently not available via PyPi, but you can install it directly from Github as follows:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">wget https://github.com/va1entin/plasm/-/archive/master/plasm-master.zip
+unzip plasm-master.zip
+&lt;span class="nb">cd&lt;/span> plasm-master
+pip install .
+&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="integration-with-motioneye">Integration with motionEye&lt;/h1>
+&lt;p>The integration with motionEye currently requires a little patch to be applied to it&amp;rsquo;s &lt;code>uploadservices.py&lt;/code>, which is located at &lt;code>/usr/local/lib/python2.7/dist-packages/motioneye/uploadservices.py&lt;/code> on Raspbian. You can download it directly &lt;a href="https://github.com/va1entin/plasm/raw/master/integrations/motioneye-uploadservices.patch">here&lt;/a> (right click -&amp;gt; save as).
+Make sure to change the path to your public key accordingly and add &lt;code>remove_input_file=True&lt;/code> as shown in the &lt;a href="https://github.com/va1entin/plasm/blob/master/README.md">README&lt;/a>, if you want plasm to remove the unencrypted input file once encryption is finished.
+Plasm also logs what it&amp;rsquo;s doing using the logging module by default. Most logging happens at debug log level currently. Have a look at the &lt;a href="https://github.com/ccrisan/motioneye/wiki/Configuration-File">motionEye wiki&lt;/a> to find out how to enable debug logging.&lt;/p>
+&lt;h1 id="conclusion">Conclusion&lt;/h1>
+&lt;p>Plasm is licensed under the Apache 2.0 License. Feel free to report issues or create merge requests at &lt;a href="https://github.com/va1entin/plasm">Github&lt;/a>. Please note that I don&amp;rsquo;t plan to extend plasm&amp;rsquo;s scope on other use cases at the moment to keep it as simple as possible. If plasm doesn&amp;rsquo;t fit the scope of what you want to do, feel free to have a look at &lt;a href="https://pynacl.readthedocs.io">pynacl&amp;rsquo;s documentation&lt;/a> and use it directly.&lt;/p></description></item><item><title>Setting up unattended upgrades on Debian</title><link>https://valh.io/p/setting-up-unattended-upgrades-on-debian/</link><pubDate>Sat, 25 Aug 2018 12:30:21 +0000</pubDate><guid>https://valh.io/p/setting-up-unattended-upgrades-on-debian/</guid><description>
+&lt;h1 id="why">Why&lt;/h1>
+&lt;p>I have a Raspberry Pi running on Raspbian in my home network. It mainly provides a DNS server based on &lt;a href="https://pi-hole.net/">Pi Hole&lt;/a> and runs some cronjobs for me.
+Of course you don&amp;rsquo;t want to login to such a system regularly and install package upgrades. That&amp;rsquo;s where unattended upgrades come into play.
+I&amp;rsquo;ll tell you how to set unattended upgrades up on Debian and walk you through some config parameters that I find very useful.&lt;/p>
+&lt;h1 id="how">How&lt;/h1>
+&lt;p>Firstly, you need to install the unattended-upgrades pkg:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">apt install unattended-upgrades
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>unattended-upgrades is run automatically by the cronjob &lt;em>/etc/cron.daily/apt-compat&lt;/em>.&lt;/p>
+&lt;h2 id="the-config-file">The config file&lt;/h2>
+&lt;p>Now let&amp;rsquo;s have a look at the config file:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">vim /etc/apt/apt.conf.d/50unattended-upgrades
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The config file might look a bit messy at first due to a LOT of comments and the (in my opinion) unaesthetic apt config syntax.
+The most interesting part to begin with is the &amp;ldquo;Origins-Pattern&amp;rdquo;:&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
+&amp;quot;o=Debian,a=stable&amp;quot;;
+&amp;quot;o=Debian,a=stable-updates&amp;quot;;
+&amp;quot;o=Debian,a=proposed-updates&amp;quot;;
+&amp;quot;origin=Debian,codename=${distro_codename},label=Debian-Security&amp;quot;;
+};
+&lt;/code>&lt;/pre>&lt;h2 id="defining-package-origins">Defining package origins&lt;/h2>
+&lt;p>The Origins-Pattern defines from where unattended-upgrades will install upgrades. If an origin is missing here, package upgrades from there will be ignored. Which origins to configure here is totally up to you of course. Maybe you have installed some exotic PPA, which you always want to upgrade manually?
+To find out how to configure the origins you want, you can have a look at apt&amp;rsquo;s lists:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">val@pi:~ $ ls /var/lib/apt/lists/ &lt;span class="p">|&lt;/span> grep InRelease
+archive.raspberrypi.org_debian_dists_stretch_InRelease
+raspbian.raspberrypi.org_raspbian_dists_stretch_InRelease
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>These InRelease files provide the information you need. To find out their origin and suite (o= and a=), use the grep command:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">val@pi:~ $ grep -E &lt;span class="s1">&amp;#39;(Origin|Suite)&amp;#39;&lt;/span> /var/lib/apt/lists/archive.raspberrypi.org_debian_dists_stretch_InRelease
+Origin: Raspberry Pi Foundation
+Suite: stable
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>So the origin of this particular apt list is &amp;ldquo;Raspberry Pi Foundation&amp;rdquo; and it&amp;rsquo;s suite is &amp;ldquo;stable&amp;rdquo;. To configure this for unattended-upgrades, you&amp;rsquo;d adapt the config to look as follows:&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
+&amp;quot;o=Raspberry Pi Foundation,a=stable&amp;quot;;
+&amp;quot;o=Raspbian,a=stable&amp;quot;;
+&amp;quot;o=Debian,a=stable&amp;quot;;
+&amp;quot;o=Debian,a=stable-updates&amp;quot;;
+&amp;quot;o=Debian,a=proposed-updates&amp;quot;;
+&amp;quot;origin=Debian,codename=${distro_codename},label=Debian-Security&amp;quot;;
+};
+&lt;/code>&lt;/pre>&lt;h2 id="defining-package-blacklist">Defining package blacklist&lt;/h2>
+&lt;p>If you don&amp;rsquo;t want to upgrade certain packages from a defined origin automatically, you can put them in the blacklist, that should already be in the config file:&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">Unattended-Upgrade::Package-Blacklist {
+// &amp;quot;vim&amp;quot;;
+// &amp;quot;libc6&amp;quot;;
+// &amp;quot;libc6-dev&amp;quot;;
+// &amp;quot;libc6-i686&amp;quot;;
+};
+&lt;/code>&lt;/pre>&lt;h2 id="automatically-remove-unused-dependencies-autoremove">Automatically remove unused dependencies (autoremove)&lt;/h2>
+&lt;p>To automatically remove unused dependencies, set the following config parameter to true:&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">Unattended-Upgrade::Remove-Unused-Dependencies &amp;quot;false&amp;quot;;
+&lt;/code>&lt;/pre>&lt;h2 id="automatically-reboot">Automatically reboot&lt;/h2>
+&lt;p>Some packages require a reboot. You probably want to control when that happens. In my case the pi reboots at 2 AM, when everyone&amp;rsquo;s usually asleep, if needed.&lt;/p>
+&lt;pre>&lt;code class="language-conf" data-lang="conf">Unattended-Upgrade::Automatic-Reboot-Time &amp;quot;02:00&amp;quot;;
+&lt;/code>&lt;/pre>&lt;h1 id="debugging">Debugging&lt;/h1>
+&lt;p>unattended-upgrades offers a debug parameter, that makes debugging very easy. With &lt;em>&amp;ndash;apt-debug&lt;/em> and &lt;em>&amp;ndash;verbose&lt;/em> you can get even more debug output.
+To debug previous runs of unattended-upgrades, check the log files: &lt;em>/var/log/unattended-upgrades/unattended-upgrades.log&lt;/em> and &lt;em>/var/log/unattended-upgrades/unattended-upgrades-dpkg.log&lt;/em>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-bash" data-lang="bash">val@pi:~ $ sudo unattended-upgrades --dry-run --debug
+sudo: unable to resolve host pi
+Initial blacklisted packages:
+Initial whitelisted packages:
+Starting unattended upgrades script
+Allowed origins are: &lt;span class="o">[&lt;/span>&lt;span class="s1">&amp;#39;o=Raspberry Pi Foundation,a=stable&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;o=Raspbian,a=stable&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;o=Debian,a=stable&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;o=Debian,a=stable-updates&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;o=Debian,a=proposed-updates&amp;#39;&lt;/span>, &lt;span class="s1">&amp;#39;origin=Debian,codename=stretch,label=Debian-Security&amp;#39;&lt;/span>&lt;span class="o">]&lt;/span>
+...
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Userscript to hide YouTube comments</title><link>https://valh.io/p/userscript-to-hide-youtube-comments/</link><pubDate>Sat, 17 Mar 2018 20:01:00 +0000</pubDate><guid>https://valh.io/p/userscript-to-hide-youtube-comments/</guid><description>
+&lt;h1 id="why">Why&lt;/h1>
+&lt;p>Most comments below YouTube videos are, well, irrelevant, to say the least.
+Since they&amp;rsquo;re pretty much in the middle of the page, they still regularly caught my eyes and distracted me when I was checking the recommended videos and scrolled down the site.
+That&amp;rsquo;s why I built a little userscript to hide the comments by default and make them visible with the click of a button.&lt;/p>
+&lt;h1 id="installing-the-script">Installing the script&lt;/h1>
+&lt;h2 id="chrome">Chrome&lt;/h2>
+&lt;p>Just &lt;a href="https://github.com/va1entin/configs/raw/master/userscripts/hide-yt-comments.user.js">download the script&lt;/a> by right-clicking and selecting &lt;em>Save link as&lt;/em>. Open &lt;code>chrome://extensions&lt;/code> and drag-and-drop the file into Chrome. Chrome should ask, if you want to install it. You can also disable or remove it here.&lt;/p>
+&lt;p>Alternatively, you can also use a dedicated userscript manager from the Chrome web store. Read the paragraph on Firefox, to learn how to install the script in such a manager.&lt;/p>
+&lt;h2 id="firefox-and-others">Firefox and others&lt;/h2>
+&lt;p>Firefox requires you to install a userscript manager add-on. One of the most famous ones is Greasemonkey.
+I&amp;rsquo;m using a relatively new add-on called &lt;a href="https://addons.mozilla.org/de/firefox/addon/tampermonkey/">Tampermonkey&lt;/a>, though, because it is available across different browsers and also offers a nice configuration interface with a built-in editor.
+Feel free to use whatever you want. I&amp;rsquo;ll describe how to install the script in Tampermonkey here.&lt;/p>
+&lt;p>After Tampermonkey is installed, click on the following link. Tampermonkey should ask, if you want to install the script: &lt;a href="https://github.com/va1entin/configs/raw/master/userscripts/hide-yt-comments.user.js">Click to install&lt;/a>&lt;/p>
+&lt;h1 id="using-the-script">Using the script&lt;/h1>
+&lt;p>With the script enabled, comments will be hidden by default.&lt;/p>
+&lt;p>You can make them visible by &lt;strong>clicking the button&lt;/strong> &lt;em>Show&lt;/em> and &lt;strong>scrolling a little&lt;/strong>.&lt;/p>
+&lt;p>&lt;img src="https://valh.io/img/posts/yt-comments-userscript.webp" alt="Userscript to hide YouTube comments">&lt;/p>
+&lt;p>You can also easily modify the texts on the buttons. Just open the script and change the two values of the two variables at the very top as you wish.&lt;/p>
+&lt;h1 id="source-code">Source code&lt;/h1>
+&lt;p>The source is &lt;a href="https://github.com/va1entin/configs/raw/master/userscripts/hide-yt-comments.user.js">available on GitHub.&lt;/a>&lt;/p></description></item><item><title>How to play YouTube in background on mobile</title><link>https://valh.io/p/how-to-play-youtube-in-background-on-mobile/</link><pubDate>Mon, 05 Mar 2018 21:14:00 +0000</pubDate><guid>https://valh.io/p/how-to-play-youtube-in-background-on-mobile/</guid><description>
+&lt;p>One of the most requested features for mobile devices in, well, forever, is playing YouTube videos without having the app in foreground. YouTube introduced this feature with YouTube Red for paying customers. So if you&amp;rsquo;re lucky enough to live in one of the countries, where you can actually subscribe to YouTube Red, you can pay a few bucks per month to get this.&lt;/p>
+&lt;p>If you&amp;rsquo;re not so lucky (like me) or just don&amp;rsquo;t want to pay, you could still use a mobile browser. Until recently at least, when YouTube blocked playing videos without having the according tab open on mobile devices. This is accomplished by utilizing the so called page visibility and fullscreen API. This allows a webpage to check, if you&amp;rsquo;re &lt;em>actually&lt;/em> viewing the page.&lt;/p>
+&lt;p>Luckily, &lt;a href="https://timdream.org/">Timothy Chien&lt;/a> built an add-on for Firefox that blocks these APIs and allows you to listen to YouTube videos with another tab open or Firefox in background entirely on mobile.&lt;/p>
+&lt;p>Just download Firefox from your favourite app store, if you haven&amp;rsquo;t already, and visit &lt;a href="https://addons.mozilla.org/en-US/firefox/addon/video-background-play-fix">this page&lt;/a> to install the add-on.&lt;/p>
+&lt;p>This way you don&amp;rsquo;t need to access YouTube in desktop mode, change your user-agent or do anything else.&lt;/p>
+&lt;p>Also, the code for the add-on is &lt;a href="https://github.com/mozilla/video-bg-play">available on GitHub&lt;/a>. So feel free to contribute!&lt;/p></description></item><item><title>Fix NoScript 10 (Quantum) default settings</title><link>https://valh.io/p/fix-noscript-10-quantum-default-settings/</link><pubDate>Tue, 09 Jan 2018 18:01:00 +0000</pubDate><guid>https://valh.io/p/fix-noscript-10-quantum-default-settings/</guid><description>
+&lt;p>The release of Firefox 57 was a major disruptive event in the Mozilla community. One of the major changes was the migration of add-ons away from XUL/XPCOM to WebExtensions. While this change makes it easier for developers to integrate their existing (Chrome) add-ons with Firefox, it also forced Firefox add-on developers to rewrite their entire add-ons from scratch. Some devs (like the very popular DownThemAll) were &lt;a href="https://www.downthemall.net/re-downthemall-and-webextensions-or-why-why-i-am-done-with-mozilla/">very frustrated&lt;/a> and abandoned decades of code and tens of thousands of users.&lt;/p>
+&lt;p>Giorgio Maone, the developer of NoScript, one of the most famous and important add-ons, decided to not let his users down and migrated it to WebExtensions. The result is an entirely new UI and a whole new workflow. Being a NoScript user for about 10 years now, it took me quite some time to get used to everything but I managed to get used to the new NoScript.&lt;/p>
+&lt;p>But there&amp;rsquo;s one thing I didn&amp;rsquo;t get used to: the new default settings.&lt;/p>
+&lt;p>The new NoScript comes with quite a lot of websites, that are fully trusted by default. Some of these might be totally rational to &lt;strong>most&lt;/strong> users (google.com, youtube.com, etc&amp;hellip;), others not so much (wlxrs.com, a parked domain, as far as I can tell). Nonetheless, I don&amp;rsquo;t want NoScript to decide who I, as it&amp;rsquo;s user, trust.
+Another weird default setting are the &amp;ldquo;default&amp;rdquo; permissions for websites. There are 3 primary states: Default, Trusted and Untrusted.&lt;/p>
+&lt;p>&lt;em>Default&lt;/em> = frames, fetch, &amp;ldquo;other&amp;rdquo;&lt;/p>
+&lt;p>&lt;em>Trusted&lt;/em> = Anything&lt;/p>
+&lt;p>&lt;em>Untrusted&lt;/em> = Nothing&lt;/p>
+&lt;p>Since every site, that is not explicitly &lt;em>trusted&lt;/em> or &lt;em>untrusted&lt;/em>, gets assigned the &amp;ldquo;&lt;em>default&lt;/em>&amp;rdquo; state, it is allowed to do &lt;strong>some things&lt;/strong> and it&amp;rsquo;s not even entirely clear what these are (&amp;ldquo;other&amp;rdquo;).&lt;/p>
+&lt;p>So I modified the default config, to not allow anything by default and also not trust or untrust any website. You can import this config either by downloading &lt;a href="https://valh.io/attachments/noscript_clean_config.txt">this file&lt;/a> and using the &lt;em>import&lt;/em> button on the NoScript options page to upload it or by copy pasting the following JSON into the text field that appears at the bottom of the page when the &amp;ldquo;Debug&amp;rdquo; checkbox is activated:&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;DEFAULT&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;capabilities&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;span class="nt">&amp;#34;temp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;TRUSTED&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;capabilities&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="s2">&amp;#34;script&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;object&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;media&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;frame&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;font&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;webgl&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;fetch&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="s2">&amp;#34;other&amp;#34;&lt;/span>
+&lt;span class="p">],&lt;/span>
+&lt;span class="nt">&amp;#34;temp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;UNTRUSTED&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;capabilities&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;span class="nt">&amp;#34;temp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;sites&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nt">&amp;#34;trusted&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;span class="nt">&amp;#34;untrusted&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[],&lt;/span>
+&lt;span class="nt">&amp;#34;custom&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{},&lt;/span>
+&lt;span class="nt">&amp;#34;temp&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nt">&amp;#34;enforced&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nt">&amp;#34;autoAllowTop&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Generating CPU load on Windows</title><link>https://valh.io/p/generating-cpu-load-on-windows/</link><pubDate>Tue, 19 Dec 2017 17:27:20 +0000</pubDate><guid>https://valh.io/p/generating-cpu-load-on-windows/</guid><description>
+&lt;p>I recently wanted to check, if there was a problem with my CPU under heavy load, when running on Windows. For such purposes &lt;a href="http://download.sysinternals.com/files/CPUSTRES.zip">CPUSTRES.exe from the Sysinternals suite&lt;/a> is very helpful.&lt;/p>
+&lt;p>CPUSTRES is a handy little tool to check your process for faults on heavy load.
+It comes with a simple GUI and allows you to instantly put heavy CPU load on your system.&lt;/p>
+&lt;p>CPUSTRES comes as a simple standalone program with a GUI and 4 threads to activate. You can also assign different intesities per thread. Task manager helps checking how much load is actually put on the CPU.&lt;/p>
+&lt;p>&lt;img src="https://valh.io/img/posts/cpustres.webp" alt="CPUSTRES screenshot">&lt;/p></description></item><item><title>First post</title><link>https://valh.io/p/first-post/</link><pubDate>Sat, 14 Oct 2017 13:36:40 +0000</pubDate><guid>https://valh.io/p/first-post/</guid><description>
+&lt;h1 id="this-is-a-test">This is a test&lt;/h1>
+&lt;p>Welcome!&lt;/p>
+&lt;h2 id="2nd-level-headline">2nd level headline&lt;/h2>
+&lt;h3 id="3rd-level-headline">3rd level headline&lt;/h3></description></item></channel></rss>
