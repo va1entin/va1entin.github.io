@@ -1,0 +1,106 @@
+baseurl: https://valh.io
+languageCode: en-us
+theme: clean-blog
+paginate: 5
+title: Blog
+
+permalinks:
+    post: /p/:slug/
+    page: /:slug/
+
+outputs:
+    home:
+        - html
+        - rss
+        - json
+
+taxonomies:
+  tag: tags
+
+params:
+    default_author: Valentin Heidelberger
+    description: The personal blog of Valentin Heidelberger
+    nav:
+        search: true # Display link to search in navbar
+        title: Valentin Heidelberger # Displayed on the navbar's left side
+    header_img: /img/posts/lightbulb_saya-kimura.jpg
+    taxonomy_header_imgs:
+        cheatsheet: linux.webp
+        data: data.webp
+        docker: docker.png
+        homeassistant: homeassistant.webp
+        homeserverpi: raspberrypi.webp
+        linux: linux.webp
+        music: vinyl.webp
+        raspberrypi: raspberrypi.webp
+        technology: rz.webp
+    fourofour_img: /img/404.webp
+    featured_tags:
+        - linux
+        - raspberrypi
+        - homeassistant
+        - data
+        - cheatsheet
+    mainSections:
+        - post
+    featuredImageField: header_img
+    rssFullContent: true
+    favicon: /img/favicon.ico
+
+    footer:
+        copyright_name: Valentin Heidelberger
+        since: 2017
+        customText:
+        rss: true
+        social:
+            xing_username: Valentin_Heidelberger
+            linkedin_username : valentin-heidelberger-251769102
+            discogs_username: va1entin
+            github_username:  va1entin
+            gitlab_username: va1entin
+
+    dateFormat:
+        published: Jan 02, 2006
+        lastUpdated: Jan 02, 2006 15:04 MST
+
+    article:
+        math: false
+        license:
+            enabled: true
+            default: Licensed under CC BY 4.0
+
+    colorScheme:
+        # Display toggle
+        toggle: true
+        # Available values: light, dark
+        default: dark
+
+    imageProcessing:
+        cover:
+            enabled: true
+        content:
+            enabled: true
+
+### Custom menu
+### See https://docs.stack.jimmycai.com/configuration/custom-menu
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
+menu:
+    main:
+        - identifier: home
+          name: Home
+          url: /
+          weight: -100
+          pre: home
+
+markup:
+    tableOfContents:
+        startLevel: 1
+        ordered: false
+    highlight:
+        style: dracula
+    goldmark:
+        renderer:
+            unsafe: true
+
+pygmentsUseClasses: true
+
