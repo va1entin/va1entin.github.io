@@ -1,6 +1,7 @@
 baseurl: https://valh.io
 languageCode: en-us
 theme: hugo-theme_clean-blog_enhanced
+#theme: clean-blog-local
 paginate: 5
 title: Blog
 
