@@ -1,7 +1,7 @@
 ---
 author: Valentin Heidelberger
 comments: false
-date: "2021-06-11T15:21:36Z"
+date: "2021-06-12T15:21:36Z"
 header_img: /img/tags/homeassistant.webp
 subtitle: ""
 tags:
