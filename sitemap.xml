@@ -3,7 +3,22 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://valh.io/</loc>
-    <lastmod>2021-03-02T15:53:11+00:00</lastmod>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/homeassistant/</loc>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/p/let-homeassistant-notify-you-of-updates/</loc>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/post/</loc>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/</loc>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/technology/</loc>
+    <lastmod>2021-06-11T15:21:36+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/cheatsheet/</loc>
     <lastmod>2021-03-02T15:53:11+00:00</lastmod>
@@ -17,16 +32,7 @@
     <loc>https://valh.io/tags/linux/</loc>
     <lastmod>2021-03-02T15:53:11+00:00</lastmod>
   </url><url>
-    <loc>https://valh.io/post/</loc>
-    <lastmod>2021-03-02T15:53:11+00:00</lastmod>
-  </url><url>
     <loc>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</loc>
-    <lastmod>2021-03-02T15:53:11+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/tags/</loc>
-    <lastmod>2021-03-02T15:53:11+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/tags/technology/</loc>
     <lastmod>2021-03-02T15:53:11+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/p/talk-how-suse-migrated-200k-user-accounts-to-ucs/</loc>

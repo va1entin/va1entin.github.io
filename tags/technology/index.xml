@@ -6,7 +6,17 @@
     <description>Recent content in technology on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Mar 2021 15:53:11 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 11 Jun 2021 15:21:36 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Let HomeAssistant notify you of updates</title>
+      <link>https://valh.io/p/let-homeassistant-notify-you-of-updates/</link>
+      <pubDate>Fri, 11 Jun 2021 15:21:36 +0000</pubDate>
+      
+      <guid>https://valh.io/p/let-homeassistant-notify-you-of-updates/</guid>
+      <description>HomeAssistant releases new updates very regularly. Each month there is a new release which usually receives several patch releases as well. If you want to keep up with updates or even update automatically, it&amp;rsquo;s nice to get notified upon the release of an update.
+Prerequisites HomeAssistant has a built-in updater sensor which automatically checks for the updates and changes state, if it finds one. This can be used as trigger in an automation.</description>
+    </item>
+    
     <item>
       <title>Python cheat sheet for InfluxDB2 (influxdb_client)</title>
       <link>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</link>
