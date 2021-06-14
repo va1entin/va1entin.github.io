@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>windows on Blog</title>
+    <link>https://valh.io/tags/windows/</link>
+    <description>Recent content in windows on Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 19 Dec 2017 17:27:20 +0000</lastBuildDate><atom:link href="https://valh.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Generating CPU load on Windows</title>
+      <link>https://valh.io/p/generating-cpu-load-on-windows/</link>
+      <pubDate>Tue, 19 Dec 2017 17:27:20 +0000</pubDate>
+      
+      <guid>https://valh.io/p/generating-cpu-load-on-windows/</guid>
+      <description>I recently wanted to check, if there was a problem with my CPU under heavy load, when running on Windows. For such purposes CPUSTRES.exe from the Sysinternals suite is very helpful.
+CPUSTRES is a handy little tool to check your process for faults on heavy load. It comes with a simple GUI and allows you to instantly put heavy CPU load on your system.
+CPUSTRES comes as a simple standalone program with a GUI and 4 threads to activate.</description>
+    </item>
+    
+  </channel>
+</rss>
