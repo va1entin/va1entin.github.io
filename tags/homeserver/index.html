@@ -37,17 +37,17 @@
 </head>
 <body>
   
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-  <div class="container">
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
     <a class="navbar-brand" href="/index.html">Valentin Heidelberger</a>
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       Menu
       <i class="fas fa-bars"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
         <li class="nav-item">
-          <a class="nav-link" title="Blog" href="/index.html">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" title="Blog" href="/index.html">
             <span class="fa fa-book-open"></span>
             <span> Blog</span>
           </a>
@@ -55,7 +55,7 @@
         
         
         <li class="nav-item">
-          <a href="/search/" class="nav-link" title="Search">
+          <a href="/search/" class="nav-link px-lg-3 py-3 py-lg-4" title="Search">
             <span class="fa fa-search nav-search-icon"></span>
             <span> Search</span>
           </a>
@@ -63,7 +63,7 @@
         
         
           <li class="nav-item" onclick="toggle()">
-            <a class="nav-link" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
               <span class="fa fa-adjust"></span>
               <span> Theme</span>
             </a>
@@ -82,10 +82,9 @@
 
 
 <header class="masthead" style="background-image: url('/img/posts/lightbulb_saya-kimura.jpg')">
-  <div class="overlay"></div>
-  <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
           
           
               
@@ -106,108 +105,109 @@
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
       <h2>Posts tagged with: homeserver</h2>
-      <hr>
+      
+      <hr class="my-4" />
       <ul>
+        
           
-            <div class="post-preview">
-    <a href="/p/raspberry-pi-configure-wlan/wifi-ssh-before-first-boot/">
-        <h2 class="post-title">
-            Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-    </a>
-    <p class="post-meta">Posted by Valentin Heidelberger on September 10, 2018</p>
+<div class="post-preview">
+  <a href="/p/raspberry-pi-configure-wlan/wifi-ssh-before-first-boot/">
+    <h2 class="post-title">
+      Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot
+    </h2>
+    <h3 class="post-subtitle">
+      
+    </h3>
+  </a>
+  <p class="post-meta">Posted by Valentin Heidelberger on September 10, 2018</p>
 </div>
-<hr>
-          
+
+<hr class="my-4" />
+        
       </ul>
     </div>
   </div>
 </div>
 
-  <hr>
   
-<footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <ul class="list-inline text-center">
-            
-            <li class="list-inline-item">
-              <a href="/index.xml" target="_blank">
-                  <span class="fa-stack fa-lg">
-                      <i class="far fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-rss fa-stack-1x"></i>
-                  </span>
-              </a>
-            </li>
-            
-            
-            <li class="list-inline-item">
-              <a href="https://github.com/va1entin" target="_blank">
+<footer class="border-top">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="/index.xml" target="_blank">
                 <span class="fa-stack fa-lg">
-                  <i class="far fa-circle fa-stack-2x"></i>
-                  <i class="fab fa-github fa-stack-1x"></i>
+                    <i class="far fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-rss fa-stack-1x"></i>
                 </span>
-              </a>
-            </li>
-            
-            
-          <li class="list-inline-item">
-            <a href="https://gitlab.com/va1entin" target="_blank">
-              <span class="fa-stack fa-lg">
-                <i class="far fa-circle fa-stack-2x"></i>
-                <i class="fab fa-gitlab fa-stack-1x"></i>
-              </span>
             </a>
           </li>
           
           
           <li class="list-inline-item">
-            <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+            <a href="https://github.com/va1entin" target="_blank">
               <span class="fa-stack fa-lg">
                 <i class="far fa-circle fa-stack-2x"></i>
-                <i class="fab fa-linkedin fa-stack-1x"></i>
+                <i class="fab fa-github fa-stack-1x"></i>
               </span>
             </a>
           </li>
           
           
-          <li class="list-inline-item">
-            <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
-              <span class="fa-stack fa-lg">
-                <i class="far fa-circle fa-stack-2x"></i>
-                <i class="fab fa-xing fa-stack-1x"></i>
-              </span>
-            </a>
-          </li>
-          
-          <p class="copyright text-muted">
-          
-              <br>
-              <br>
-              <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2021
-              <br>
-              This applies to the contents of my blog and other texts on this site only.
-              <br>
-              <a href="/terms-of-use">Terms of use</a>
-              <br>
-              Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
-          
-          </p>
-          </ul>
-          <br>
-          <br>
+        <li class="list-inline-item">
+          <a href="https://gitlab.com/va1entin" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-gitlab fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-linkedin fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-xing fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        <div class="small text-center text-muted fst-italic">
+        
+            <br>
+            <br>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2021
+            <br>
+            This applies to the contents of my blog and other texts on this site only.
+            <br>
+            <a href="/terms-of-use">Terms of use</a>
+            <br>
+            Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+        
         </div>
+        </ul>
+        <br>
+        <br>
       </div>
     </div>
-  </footer>
+  </div>
+</footer>
 
   
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
   
   <script src="/js/scripts.js"></script>
 </body>

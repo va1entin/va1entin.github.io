@@ -17,6 +17,13 @@ fixedsearch = function(){
 	var navbar = document.getElementById('mainNav');
 
 	/*--------------------------------------------------------------
+	Load our json data and build fuse.js search index
+	Focus on search input
+	--------------------------------------------------------------*/
+	search_init();
+	search_input.focus();
+
+	/*--------------------------------------------------------------
 	The main keyboard event listener running the show
 	--------------------------------------------------------------*/
 	search_form.addEventListener('keydown', function(e) {
@@ -78,9 +85,9 @@ fixedsearch = function(){
 	/*--------------------------------------------------------------
 	Load our json data and builds fuse.js search index
 	--------------------------------------------------------------*/
-	search_form.addEventListener('focusin', function(e) {
-		search_init(); // try to load the search index
-	});
+	//search_form.addEventListener('focusin', function(e) {
+	//	search_init(); // try to load the search index
+	//});
 
 	/*--------------------------------------------------------------
 	Fetch some json without jquery
@@ -171,7 +178,7 @@ fixedsearch = function(){
 				search_items = search_items + '<li class="post-preview"><a href="' + results[item].item.permalink + '" tabindex="0">' +
 					'<h3 class="post-subtitle">' + results[item].item.title + '</h3></a>' +
 					'<p class="post-meta">' + 'Posted by ' + results[item].item.author + ' on ' + results[item].item.date + '<br>' + '<span class="fa fa-tag"></span>' + ' ' + results[item].item.tags.join(', ') + '</p>' +
-				'<hr></li>';
+				'<hr class="my-4" /></li>';
 			}
 			results_available = true;
 		}

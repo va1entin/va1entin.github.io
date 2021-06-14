@@ -8,11 +8,15 @@ pre {
 }
 
 hr {
-  border-top: 1px solid rgba(128, 128, 128, 0.1);
+  border-top: 1px solid #212121;
+}
+
+.border-top {
+  border-top: 1px solid #212121 !important;
 }
 
 .text_muted {
-  color: ##212529 !important;
+  color: #212529 !important;
 }
 
 a {
@@ -77,6 +81,7 @@ a {
 
 .table {
   color: #e2e2e2;
+  --bs-table-striped-color: #e2e2e2;
 }
 
 .form-control {
@@ -88,4 +93,5 @@ a {
   background-color: #181a1b;
   border: 1px solid #00657b;
   box-shadow: 0 0 0 0.2rem #00657b;
+  color: #495057
 }
