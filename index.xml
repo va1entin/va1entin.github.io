@@ -6,7 +6,34 @@
         <description>Recent content on Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 11 Jun 2021 19:21:36 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 19 Jun 2021 17:22:45 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Sync system time automatically at Windows startup</title>
+        <link>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</link>
+        <pubDate>Sat, 19 Jun 2021 17:22:45 +0000</pubDate>
+        
+        <guid>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</guid>
+        <description>
+ &lt;p&gt;Unlike most other operating systems, Windows 10 doesn&amp;rsquo;t sync the time with an internet service at startup by default. This can become an issue, if your mainboard&amp;rsquo;s built-in clock provides a wrong time or uses a different time zone.&lt;/p&gt;
+&lt;p&gt;If the mainboard&amp;rsquo;s battery responsible for storing time dies, it can become an even more annoying problem, because Windows will always start with an ever-growing time skew, which can eventually result in web browsing become a problem due to Windows considering websites&#39; SSL certificates &lt;em&gt;not yet valid&lt;/em&gt; - effectively rendering browsing the majority of web pages impossible!&lt;/p&gt;
+&lt;p&gt;Luckily, this can be easily worked around by starting Windows&#39; time sync service automatically at startup. Below you&amp;rsquo;ll find instructions on doing this with the graphical &lt;em&gt;Services&lt;/em&gt; console and PowerShell.&lt;/p&gt;
+&lt;h1 id=&#34;services-console&#34;&gt;Services console&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Press &lt;code&gt;Windows Key&lt;/code&gt; + &lt;code&gt;r&lt;/code&gt; at the same time to open the &lt;strong&gt;Run&lt;/strong&gt; dialogue&lt;/li&gt;
+&lt;li&gt;Type &lt;code&gt;services.msc&lt;/code&gt; and hit &lt;strong&gt;Run&lt;/strong&gt; - the &lt;strong&gt;Services&lt;/strong&gt; window opens &lt;img src=&#34;https://valh.io/img/posts/run_services-msc.webp&#34; alt=&#34;Run dialog&#34;&gt;&lt;/li&gt;
+&lt;li&gt;In the list, scroll to &lt;strong&gt;Windows Time&lt;/strong&gt; (in german: &lt;strong&gt;Windows-Zeitgeber&lt;/strong&gt;) and right-click on it, click &lt;strong&gt;Properties&lt;/strong&gt; in the context menu&lt;/li&gt;
+&lt;li&gt;In the &lt;strong&gt;Properties&lt;/strong&gt; window change &lt;strong&gt;Startup type&lt;/strong&gt; to &lt;em&gt;Automatic&lt;/em&gt;, click &lt;strong&gt;Start&lt;/strong&gt; and click &lt;strong&gt;OK&lt;/strong&gt; to save &lt;img src=&#34;https://valh.io/img/posts/windows_time_service_properties.webp&#34; alt=&#34;Windows time service properties window&#34;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;powershell&#34;&gt;PowerShell&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Start PowerShell as admin&lt;/li&gt;
+&lt;li&gt;Run the following command:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Set-Service&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Name&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;W32Time&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-Status&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;running&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;-StartupType&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;automatic&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If PowerShell complains about not finding a service with the specified name, you can run the following command to get a list of all available services - Microsoft might have changed the time service&amp;rsquo;s name.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;nb&#34;&gt;Get-Service&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>Let HomeAssistant notify you of updates</title>
         <link>https://valh.io/p/let-homeassistant-notify-you-of-updates/</link>
         <pubDate>Fri, 11 Jun 2021 19:21:36 +0000</pubDate>

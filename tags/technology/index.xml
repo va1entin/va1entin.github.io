@@ -6,7 +6,17 @@
     <description>Recent content in technology on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 11 Jun 2021 19:21:36 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Jun 2021 17:22:45 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sync system time automatically at Windows startup</title>
+      <link>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</link>
+      <pubDate>Sat, 19 Jun 2021 17:22:45 +0000</pubDate>
+      
+      <guid>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</guid>
+      <description>Unlike most other operating systems, Windows 10 doesn&amp;rsquo;t sync the time with an internet service at startup by default. This can become an issue, if your mainboard&amp;rsquo;s built-in clock provides a wrong time or uses a different time zone.
+If the mainboard&amp;rsquo;s battery responsible for storing time dies, it can become an even more annoying problem, because Windows will always start with an ever-growing time skew, which can eventually result in web browsing become a problem due to Windows considering websites&#39; SSL certificates not yet valid - effectively rendering browsing the majority of web pages impossible!</description>
+    </item>
+    
     <item>
       <title>Let HomeAssistant notify you of updates</title>
       <link>https://valh.io/p/let-homeassistant-notify-you-of-updates/</link>
