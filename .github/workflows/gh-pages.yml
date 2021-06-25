@@ -11,12 +11,12 @@ on:
 
 jobs:
   lint:
-  timeout-minutes: 1
-  steps:
-    - name: pipeline-components-yamllint
-      uses: pipeline-components/yamllint@v0.16.1
-    - name: pipeline-components-markdownlint
-      uses: pipeline-components/markdownlint@v0.6.3
+    timeout-minutes: 1
+    steps:
+      - name: pipeline-components-yamllint
+        uses: pipeline-components/yamllint@v0.16.1
+      - name: pipeline-components-markdownlint
+        uses: pipeline-components/markdownlint@v0.6.3
   deploy:
     runs-on: ubuntu-20.04
     timeout-minutes: 1
