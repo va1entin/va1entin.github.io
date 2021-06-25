@@ -16,9 +16,11 @@ jobs:
     steps:
       - name: pipeline-components-yamllint
         uses: pipeline-components/yamllint@v0.16.1
+      - name: yamllint
         run: yamllint .
       - name: pipeline-components-markdownlint
         uses: pipeline-components/markdownlint@v0.6.3
+      - name: mdl
         run: mdl .
   deploy:
     runs-on: ubuntu-20.04
