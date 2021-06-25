@@ -10,18 +10,13 @@ on:
     - cron:  '0 8 * * *'
 
 jobs:
-  lint:
-    runs-on: ubuntu-20.04
-    timeout-minutes: 1
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
     steps:
-      - name: pipeline-components-yamllint
-        uses: pipeline-components/yamllint@v0.16.1
-      - name: yamllint
-        run: yamllint .
-      - name: pipeline-components-markdownlint
-        uses: pipeline-components/markdownlint@v0.6.3
-      - name: mdl
-        run: mdl .
+      - uses: actions/checkout@v2
+      - name: Run yamllint
+        uses: frenck/action-yamllint@v1
   deploy:
     runs-on: ubuntu-20.04
     timeout-minutes: 1
