@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run yamllint
-        run: yamllint .
+        run: yamllint --format github .
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 1
