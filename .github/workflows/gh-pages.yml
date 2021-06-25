@@ -16,9 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run yamllint
-        uses: frenck/action-yamllint@v1
-        with:
-          path: .
+        run: yamllint .
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 1
