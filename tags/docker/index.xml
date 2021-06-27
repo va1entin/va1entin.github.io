@@ -6,7 +6,17 @@
     <description>Recent content in docker on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Mar 2021 15:53:11 +0000</lastBuildDate><atom:link href="https://valh.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Jun 2021 12:22:28 +0000</lastBuildDate><atom:link href="https://valh.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fix silently failing Docker Desktop upgrade (Windows)</title>
+      <link>https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/</link>
+      <pubDate>Sat, 26 Jun 2021 12:22:28 +0000</pubDate>
+      
+      <guid>https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/</guid>
+      <description>Docker Desktop has an internal update mechanism which will, as soon as an update is available, begin asking you to apply it on every start. Unfortunately this update mechanism is not working properly for me and other users. Once you allow Docker Desktop to run the update with admin privileges nothing seems to happen and Docker also doesn&amp;rsquo;t start properly until you restart it manually.
+The cause seems to be some kind of privilege problem with the Docker service running in the background.</description>
+    </item>
+    
     <item>
       <title>Python cheat sheet for InfluxDB2 (influxdb_client)</title>
       <link>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</link>

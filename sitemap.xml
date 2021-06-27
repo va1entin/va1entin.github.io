@@ -3,21 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://valh.io/</loc>
-    <lastmod>2021-06-19T17:22:45+00:00</lastmod>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/docker/</loc>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/</loc>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/post/</loc>
-    <lastmod>2021-06-19T17:22:45+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</loc>
-    <lastmod>2021-06-19T17:22:45+00:00</lastmod>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/</loc>
-    <lastmod>2021-06-19T17:22:45+00:00</lastmod>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/technology/</loc>
-    <lastmod>2021-06-19T17:22:45+00:00</lastmod>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/windows/</loc>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/wsl/</loc>
+    <lastmod>2021-06-26T12:22:28+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</loc>
     <lastmod>2021-06-19T17:22:45+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/homeassistant/</loc>
@@ -30,9 +39,6 @@
     <lastmod>2021-03-02T15:53:11+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/data/</loc>
-    <lastmod>2021-03-02T15:53:11+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/tags/docker/</loc>
     <lastmod>2021-03-02T15:53:11+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/linux/</loc>

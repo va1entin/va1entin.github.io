@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta name="generator" content="Hugo 0.83.1" /><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="The personal blog of Valentin Heidelberger"><meta name="author" content="Valentin Heidelberger">
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="Docker Desktop has an internal update mechanism which will, as soon as an update is available, begin asking you to apply it on every start. Unfortunately this update mechanism is not working properly for me and other users. Once you allow Docker Desktop to run the update with admin privileges nothing seems to happen and Docker also doesn&amp;rsquo;t start properly until you restart it manually.
+The cause seems to be some kind of privilege problem with the Docker service running in the background."><meta name="author" content="Valentin Heidelberger">
 
-<link rel="canonical" href="https://valh.io/">
+<link rel="canonical" href="https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/">
 
 
 <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
-<title>Blog</title>
+<title>Fix silently failing Docker Desktop upgrade (Windows)</title>
 
-<link rel="alternate" type="application/rss+xml" href="https://valh.io/index.xml" title="Blog" />
 
 <link rel="stylesheet" href="/css/styles.css" />
 
@@ -81,165 +80,77 @@
 
   
 
-
-<header class="masthead" style="background-image: url('/img/posts/lightbulb_saya-kimura.jpg')">
+<header class="masthead" style="background-image: url('/img/tags/docker.png')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
           
           
+          <div class="post-heading">
+            <h1>Fix silently failing Docker Desktop upgrade (Windows)</h1>
+            <h2 class="subheading"></h2>
+            <span class="meta">Posted by Valentin Heidelberger on June 26, 2021</span>
+            
+            <span class="meta"> Tags:
               
-              <div class="site-heading">
-                
-                
-                <h1>Blog</h1>
-                <span class="subheading">
-                  
-                  
-                  <a href="/tags/linux" style="text-decoration: normal; font-weight: normal; color: #ffffff;">
+              <a href="/tags/docker">
                     <i class="fa fa-tag"></i>
-                    linux
+                    docker
                   </a>
                   
-                  <a href="/tags/raspberrypi" style="text-decoration: normal; font-weight: normal; color: #ffffff;">
+              <a href="/tags/wsl">
                     <i class="fa fa-tag"></i>
-                    raspberrypi
+                    wsl
                   </a>
                   
-                  <a href="/tags/homeassistant" style="text-decoration: normal; font-weight: normal; color: #ffffff;">
+              <a href="/tags/windows">
                     <i class="fa fa-tag"></i>
-                    homeassistant
+                    windows
                   </a>
                   
-                  <a href="/tags/data" style="text-decoration: normal; font-weight: normal; color: #ffffff;">
+              <a href="/tags/technology">
                     <i class="fa fa-tag"></i>
-                    data
-                  </a>
-                  
-                  <a href="/tags/cheatsheet" style="text-decoration: normal; font-weight: normal; color: #ffffff;">
-                    <i class="fa fa-tag"></i>
-                    cheatsheet
+                    technology
                   </a>
                   
                 </span>
                 
-                
-                
-            </div>
-          
+              </div>
+              
         </div>
       </div>
     </div>
 </header>
   
+
+<article>
   
-  <div class="container">
-  <div class="row">
-  <div class="col-lg-8 col-md-10 mx-auto">
-    
-      
-<div class="post-preview">
-  <a href="/p/python-script-for-cloudflare-dns-record-updates-dyndns/">
-    <h2 class="post-title">
-      Python script for Cloudflare DNS record updates (DynDNS)
-    </h2>
-    <h3 class="post-subtitle">
-      No global API key required
-    </h3>
-  </a>
-  <p class="post-meta">Posted by Valentin Heidelberger on February 6, 2021</p>
-</div>
+<aside id="custom_toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#stop-docker-service">Stop docker service</a></li>
+    <li><a href="#run-installer">Run installer</a></li>
+  </ul>
+</nav>
+</aside>
 
-<hr class="my-4" />
-    
-      
-<div class="post-preview">
-  <a href="/p/simple-cli-audio-metadata-editor-tag_dat.py/">
-    <h2 class="post-title">
-      Simple CLI audio metadata editor: tag_dat.py
-    </h2>
-    <h3 class="post-subtitle">
-      
-    </h3>
-  </a>
-  <p class="post-meta">Posted by Valentin Heidelberger on December 5, 2020</p>
-</div>
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>Docker Desktop has an internal update mechanism which will, as soon as an update is available, begin asking you to apply it on every start. Unfortunately this update mechanism is not working properly for me and other users. Once you allow Docker Desktop to run the update with admin privileges nothing seems to happen and Docker also doesn&rsquo;t start properly until you restart it manually.</p>
+<p>The cause seems to be some kind of privilege problem with the Docker service running in the background. Here is a workaround that works nicely for me.</p>
+<h1 id="stop-docker-service">Stop docker service</h1>
+<p>Start a command line such as PowerShell as admin and run the following command to stop the docker service (this will stop any running containers!)</p>
+<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">net</span> <span class="n">stop</span> <span class="n">com</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+</code></pre></div><h1 id="run-installer">Run installer</h1>
+<p>Download the most recent version of Docker Desktop from <a href="https://www.docker.com/products/docker-desktop">docker.com</a> and run the installer, once the previous step was executed successfully.</p>
+<p>The update should work now.</p>
 
-<hr class="my-4" />
-    
-      
-<div class="post-preview">
-  <a href="/p/get-ledger-live-working-on-nixos/">
-    <h2 class="post-title">
-      Get Ledger Live working on NixOS
-    </h2>
-    <h3 class="post-subtitle">
-      
-    </h3>
-  </a>
-  <p class="post-meta">Posted by Valentin Heidelberger on November 14, 2019</p>
-</div>
-
-<hr class="my-4" />
-    
-      
-<div class="post-preview">
-  <a href="/p/providing-access-to-thousands-of-external-storages-using-nextcloud/">
-    <h2 class="post-title">
-      Providing access to thousands of external storages using Nextcloud
-    </h2>
-    <h3 class="post-subtitle">
-      My lightning talk at Nextcloud conference 2019
-    </h3>
-  </a>
-  <p class="post-meta">Posted by Valentin Heidelberger on October 28, 2019</p>
-</div>
-
-<hr class="my-4" />
-    
-      
-<div class="post-preview">
-  <a href="/p/nextcloud-for-ucs-now-comes-with-sso-out-of-the-box/">
-    <h2 class="post-title">
-      Nextcloud for UCS now comes with SSO out of the box
-    </h2>
-    <h3 class="post-subtitle">
-      
-    </h3>
-  </a>
-  <p class="post-meta">Posted by Valentin Heidelberger on September 29, 2019</p>
-</div>
-
-<hr class="my-4" />
-    
-    
-    <ul class='pager'>
-        
-        
-
-        
-            
-                    <a class='btn btn-primary' href='/'>1</a>
-                
-            
-            
-                <a class='current btn btn-primary'>2</a>
-                
-            
-            
-                    <a class='btn btn-primary' href='/page/3/'>3</a>
-                
-            
-            
-                    <a class='btn btn-primary' href='/page/4/'>4</a>
-                
-            
-    </ul>
-
-
+        <br>
+      </div>
+    </div>
   </div>
-  </div>
-  </div>
+</article>
 
   
 <footer class="border-top">

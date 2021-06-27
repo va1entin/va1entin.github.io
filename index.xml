@@ -6,7 +6,24 @@
         <description>Recent content on Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 19 Jun 2021 17:22:45 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 26 Jun 2021 12:22:28 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Fix silently failing Docker Desktop upgrade (Windows)</title>
+        <link>https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/</link>
+        <pubDate>Sat, 26 Jun 2021 12:22:28 +0000</pubDate>
+        
+        <guid>https://valh.io/p/fix-silently-failing-docker-desktop-upgrade-windows/</guid>
+        <description>
+ &lt;p&gt;Docker Desktop has an internal update mechanism which will, as soon as an update is available, begin asking you to apply it on every start. Unfortunately this update mechanism is not working properly for me and other users. Once you allow Docker Desktop to run the update with admin privileges nothing seems to happen and Docker also doesn&amp;rsquo;t start properly until you restart it manually.&lt;/p&gt;
+&lt;p&gt;The cause seems to be some kind of privilege problem with the Docker service running in the background. Here is a workaround that works nicely for me.&lt;/p&gt;
+&lt;h1 id=&#34;stop-docker-service&#34;&gt;Stop docker service&lt;/h1&gt;
+&lt;p&gt;Start a command line such as PowerShell as admin and run the following command to stop the docker service (this will stop any running containers!)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;n&#34;&gt;net&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stop&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;service&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;run-installer&#34;&gt;Run installer&lt;/h1&gt;
+&lt;p&gt;Download the most recent version of Docker Desktop from &lt;a href=&#34;https://www.docker.com/products/docker-desktop&#34;&gt;docker.com&lt;/a&gt; and run the installer, once the previous step was executed successfully.&lt;/p&gt;
+&lt;p&gt;The update should work now.&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Sync system time automatically at Windows startup</title>
         <link>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</link>
         <pubDate>Sat, 19 Jun 2021 17:22:45 +0000</pubDate>
