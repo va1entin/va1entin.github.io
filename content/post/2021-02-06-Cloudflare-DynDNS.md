@@ -83,7 +83,7 @@ So if I wanted to change a DNS record called *hello.example.com* using a read to
 read_token: "foo"
 edit_token: "bar"
 zone_name: "example.com"
-record_name: "hello.example.com"
+record_name: "hello"
 ```
 
 ## Run script
