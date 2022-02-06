@@ -26,10 +26,10 @@ I've written a Python script, based on a bash script by [benkulbertis](https://g
 
 The Python script does *not* require a general API token. So you can set up API tokens specifically authorized for what the script needs to do.
 
-You can get the script [here](https://github.com/va1entin/tools/blob/master/cloudflare-update-record/cloudflare-update-record.py).
+You can get the script [here](https://github.com/va1entin/tools/blob/master/cloudflare_update_record/cloudflare_update_record.py).
 
 ```bash
-wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare-update-record/cloudflare-update-record.py
+wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare_update_record/cloudflare_update_record.py
 ```
 
 ## Setting up API tokens
@@ -68,7 +68,7 @@ Click [here](/img/posts/cloudflare_read_token.webp) for a screenshot.
 
 
 ## Create config file
-The script uses a YAML-format config file and assumes it at `./cloudflare-update-record_config.yaml`. You can give a different path using the `-c | --config` parameter.
+The script uses a YAML-format config file and assumes it at `./cloudflare_update_record_config.yaml`. You can give a different path using the `-c | --config` parameter.
 
 ```yaml
 read_token: "<YOUR READ TOKEN>"
@@ -90,12 +90,12 @@ record_name: "hello"
 Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:
 
 ```bash
-./cloudflare-update-record.py -h
+./cloudflare_update_record.py -h
 ```
 
 ### Logging
 
-The scripts logs to `cloudflare-update-record.log` with log level `info` by default. You can change the log file and log level, see `-h`.
+The scripts logs to `cloudflare_update_record.log` with log level `info` by default. You can change the log file and log level, see `-h`.
 
 ### IP provider
 
@@ -112,13 +112,13 @@ The provider must return **just the IP address as plain text** on a `HTTP GET` r
 ## Update a DNS A (IPv4) record
 
 ```bash
-cloudflare-update-record.py -4
+cloudflare_update_record.py -4
 ```
 
 ## Update a DNS AAAA (IPv6) record
 
 ```bash
-cloudflare-update-record.py -6
+cloudflare_update_record.py -6
 ```
 
 Check the log for a message `INFO: DNS A record update succeeded, IP changed to: <YOUR IP ADDRESS>`
