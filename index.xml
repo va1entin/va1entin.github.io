@@ -330,8 +330,8 @@ At the time of writing this post the possible write options are: synchronous, as
 &lt;h2 id=&#34;getting-the-script&#34;&gt;Getting the script&lt;/h2&gt;
 &lt;p&gt;I&amp;rsquo;ve written a Python script, based on a bash script by &lt;a href=&#34;https://gist.github.com/benkulbertis/fff10759c2391b6618dd&#34;&gt;benkulbertis&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The Python script does &lt;em&gt;not&lt;/em&gt; require a general API token. So you can set up API tokens specifically authorized for what the script needs to do.&lt;/p&gt;
-&lt;p&gt;You can get the script &lt;a href=&#34;https://github.com/va1entin/tools/blob/master/cloudflare-update-record/cloudflare-update-record.py&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare-update-record/cloudflare-update-record.py
+&lt;p&gt;You can get the script &lt;a href=&#34;https://github.com/va1entin/tools/blob/master/cloudflare_update_record/cloudflare_update_record.py&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare_update_record/cloudflare_update_record.py
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;setting-up-api-tokens&#34;&gt;Setting up API tokens&lt;/h2&gt;
 &lt;p&gt;The script needs two tokens:&lt;/p&gt;
 &lt;ul&gt;
@@ -392,7 +392,7 @@ At the time of writing this post the possible write options are: synchronous, as
 
 &lt;p&gt;Click &lt;a href=&#34;https://valh.io/img/posts/cloudflare_read_token.webp&#34;&gt;here&lt;/a&gt; for a screenshot.&lt;/p&gt;
 &lt;h2 id=&#34;create-config-file&#34;&gt;Create config file&lt;/h2&gt;
-&lt;p&gt;The script uses a YAML-format config file and assumes it at &lt;code&gt;./cloudflare-update-record_config.yaml&lt;/code&gt;. You can give a different path using the &lt;code&gt;-c | --config&lt;/code&gt; parameter.&lt;/p&gt;
+&lt;p&gt;The script uses a YAML-format config file and assumes it at &lt;code&gt;./cloudflare_update_record_config.yaml&lt;/code&gt;. You can give a different path using the &lt;code&gt;-c | --config&lt;/code&gt; parameter.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;nt&#34;&gt;read_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;YOUR READ TOKEN&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;edit_token&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;YOUR EDIT TOKEN&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;zone_name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;YOUR ZONE NAME&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
@@ -404,9 +404,9 @@ At the time of writing this post the possible write options are: synchronous, as
 &lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;record_name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-script&#34;&gt;Run script&lt;/h2&gt;
 &lt;p&gt;Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./cloudflare-update-record.py -h
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;./cloudflare_update_record.py -h
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;logging&#34;&gt;Logging&lt;/h3&gt;
-&lt;p&gt;The scripts logs to &lt;code&gt;cloudflare-update-record.log&lt;/code&gt; with log level &lt;code&gt;info&lt;/code&gt; by default. You can change the log file and log level, see &lt;code&gt;-h&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The scripts logs to &lt;code&gt;cloudflare_update_record.log&lt;/code&gt; with log level &lt;code&gt;info&lt;/code&gt; by default. You can change the log file and log level, see &lt;code&gt;-h&lt;/code&gt;.&lt;/p&gt;
 &lt;h3 id=&#34;ip-provider&#34;&gt;IP provider&lt;/h3&gt;
 &lt;p&gt;It gets the external IP address from a &lt;em&gt;provider&lt;/em&gt;, by default: &lt;a href=&#34;https://icanhazip.com&#34;&gt;icanhazip.com&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;You can specify a different provider, see &lt;code&gt;-h&lt;/code&gt;.
@@ -414,9 +414,9 @@ The provider must return &lt;strong&gt;just the IP address as plain text&lt;/str
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# curl https://ipv4.icanhazip.com&lt;/span&gt;
 1.1.1.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;update-a-dns-a-ipv4-record&#34;&gt;Update a DNS A (IPv4) record&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cloudflare-update-record.py -4
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cloudflare_update_record.py -4
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;update-a-dns-aaaa-ipv6-record&#34;&gt;Update a DNS AAAA (IPv6) record&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cloudflare-update-record.py -6
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;cloudflare_update_record.py -6
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Check the log for a message &lt;code&gt;INFO: DNS A record update succeeded, IP changed to: &amp;lt;YOUR IP ADDRESS&amp;gt;&lt;/code&gt;
 and remember that it might take up to 24 hours for your DNS update to be propagated around the world.&lt;/p&gt;
 </description>

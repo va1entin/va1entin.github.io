@@ -159,8 +159,8 @@ Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain reg
 <h2 id="getting-the-script">Getting the script</h2>
 <p>I&rsquo;ve written a Python script, based on a bash script by <a href="https://gist.github.com/benkulbertis/fff10759c2391b6618dd">benkulbertis</a>.</p>
 <p>The Python script does <em>not</em> require a general API token. So you can set up API tokens specifically authorized for what the script needs to do.</p>
-<p>You can get the script <a href="https://github.com/va1entin/tools/blob/master/cloudflare-update-record/cloudflare-update-record.py">here</a>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare-update-record/cloudflare-update-record.py
+<p>You can get the script <a href="https://github.com/va1entin/tools/blob/master/cloudflare_update_record/cloudflare_update_record.py">here</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare_update_record/cloudflare_update_record.py
 </code></pre></div><h2 id="setting-up-api-tokens">Setting up API tokens</h2>
 <p>The script needs two tokens:</p>
 <ul>
@@ -221,7 +221,7 @@ Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain reg
 
 <p>Click <a href="/img/posts/cloudflare_read_token.webp">here</a> for a screenshot.</p>
 <h2 id="create-config-file">Create config file</h2>
-<p>The script uses a YAML-format config file and assumes it at <code>./cloudflare-update-record_config.yaml</code>. You can give a different path using the <code>-c | --config</code> parameter.</p>
+<p>The script uses a YAML-format config file and assumes it at <code>./cloudflare_update_record_config.yaml</code>. You can give a different path using the <code>-c | --config</code> parameter.</p>
 <div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">read_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR READ TOKEN&gt;&#34;</span><span class="w">
 </span><span class="w"></span><span class="nt">edit_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR EDIT TOKEN&gt;&#34;</span><span class="w">
 </span><span class="w"></span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR ZONE NAME&gt;&#34;</span><span class="w">
@@ -233,9 +233,9 @@ Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain reg
 </span><span class="w"></span><span class="nt">record_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;hello&#34;</span><span class="w">
 </span></code></pre></div><h2 id="run-script">Run script</h2>
 <p>Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./cloudflare-update-record.py -h
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./cloudflare_update_record.py -h
 </code></pre></div><h3 id="logging">Logging</h3>
-<p>The scripts logs to <code>cloudflare-update-record.log</code> with log level <code>info</code> by default. You can change the log file and log level, see <code>-h</code>.</p>
+<p>The scripts logs to <code>cloudflare_update_record.log</code> with log level <code>info</code> by default. You can change the log file and log level, see <code>-h</code>.</p>
 <h3 id="ip-provider">IP provider</h3>
 <p>It gets the external IP address from a <em>provider</em>, by default: <a href="https://icanhazip.com">icanhazip.com</a></p>
 <p>You can specify a different provider, see <code>-h</code>.
@@ -243,9 +243,9 @@ The provider must return <strong>just the IP address as plain text</strong> on a
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># curl https://ipv4.icanhazip.com</span>
 1.1.1.1
 </code></pre></div><h2 id="update-a-dns-a-ipv4-record">Update a DNS A (IPv4) record</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare-update-record.py -4
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare_update_record.py -4
 </code></pre></div><h2 id="update-a-dns-aaaa-ipv6-record">Update a DNS AAAA (IPv6) record</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare-update-record.py -6
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare_update_record.py -6
 </code></pre></div><p>Check the log for a message <code>INFO: DNS A record update succeeded, IP changed to: &lt;YOUR IP ADDRESS&gt;</code>
 and remember that it might take up to 24 hours for your DNS update to be propagated around the world.</p>
 
