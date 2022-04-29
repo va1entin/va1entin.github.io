@@ -124,6 +124,21 @@
 
 <article>
   
+<aside id="custom_toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#why">Why</a></li>
+    <li><a href="#how">How</a>
+      <ul>
+        <li><a href="#wpa3--wpa2-mixed-network">WPA3 / WPA2 mixed network</a></li>
+        <li><a href="#wpa2-only-network">WPA2-only network</a></li>
+      </ul>
+    </li>
+    <li><a href="#pi-appears-on-network-but-login-via-ssh-doesnt-work">Pi appears on network but login via SSH doesn&rsquo;t work</a></li>
+  </ul>
+</nav>
+</aside>
+
   <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -156,7 +171,16 @@ network={
 }
 </code></pre><p>Having created the config for WLAN, create another (empty) file simply called <strong>ssh</strong> in the <strong>&ldquo;boot&rdquo;</strong> partition. If you&rsquo;re on Windows, make sure that both <strong>ssh</strong> and <strong>wpa_supplicant.conf</strong> don&rsquo;t have any other extension such as <em>.txt</em>.</p>
 <p>Once the files are saved, eject the SD card safely, put it in your Pi and boot it up. You should be able to connect via SSH using the default user <em>pi</em> and password <em>raspberry</em> shortly after.</p>
-
+<h1 id="pi-appears-on-network-but-login-via-ssh-doesnt-work">Pi appears on network but login via SSH doesn&rsquo;t work</h1>
+<p>The process outlined in this article has always worked on my Raspberry Pi 4 and Zero W. On my old Pi 1 B+ however, it usually does not work - at least not without manual intervention!</p>
+<p>The Pi 1 would appear on the network and be <em>reachable</em> via SSH but <em>login</em> was not possible with the usual pi / raspberry credentials. The problem being that this default user had not yet been properly created.</p>
+<p>After having added the files as described above, I had to connect the Pi to a monitor, boot it up and wait&hellip;</p>
+<p>It took at least 30 seconds after the systemd boot was finished for a prompt to appear - so be patient. The prompt then went straight into an interactive wizard which asked about language, keyboard layout and also created the user. Only after completing this wizard, I was able to login via SSH with the default user.</p>
+<p>I&rsquo;m not sure why this is happening. On multiple tries, I also got a varying amount of steps in the wizard, sometimes more, sometimes fewer.</p>
+<p>According to some folks in the Raspberry Pi forums, zeroing the SD card before flashing the Raspberry Pi OS image is supposed to help. In my case it didn&rsquo;t but I&rsquo;m still document the command for you to try.</p>
+<p>Replace <strong>/dev/sdg</strong> with your SD card!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo dd <span class="k">if</span><span class="o">=</span>/dev/zero <span class="nv">of</span><span class="o">=</span>/dev/sdg <span class="nv">bs</span><span class="o">=</span><span class="m">8192</span> <span class="nv">status</span><span class="o">=</span>progress
+</span></span></code></pre></div>
         <br>
       </div>
     </div>
