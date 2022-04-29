@@ -131,23 +131,23 @@
 I couldn&rsquo;t test whether this config works with all Ledger devices so far. Feel free to drop me a <a href="https://twitter.com/valhei">tweet</a> if you have anything to add to this post and I&rsquo;ll gladly update it.</p>
 <p>On NixOS I needed the following additional config snippets to use my Ledger fully:</p>
 <h1 id="define-a-group-called-plugdev">Define a group called &ldquo;plugdev&rdquo;</h1>
-<div class="highlight"><pre class="chroma"><code class="language-nix" data-lang="nix"><span class="n">groups</span><span class="o">.</span><span class="n">plugdev</span> <span class="err">=</span> <span class="p">{};</span>
-</code></pre></div><h1 id="add-users-to-plugdev">Add user(s) to &ldquo;plugdev&rdquo;</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-nix" data-lang="nix"><span class="line"><span class="cl"><span class="n">groups</span><span class="o">.</span><span class="n">plugdev</span> <span class="err">=</span> <span class="p">{};</span>
+</span></span></code></pre></div><h1 id="add-users-to-plugdev">Add user(s) to &ldquo;plugdev&rdquo;</h1>
 <p>Note that you your user will most likely already be in various other groups such as <em>networkmanager</em> or <em>wheel</em>. Just append plugdev to the <em>extraGroups</em> list.
 Replace <em>myUser</em> with your user name.</p>
-<div class="highlight"><pre class="chroma"><code class="language-nix" data-lang="nix"><span class="n">users</span><span class="o">.</span><span class="n">users</span> <span class="err">=</span> <span class="p">{</span>
-<span class="o">...</span>
-  <span class="n">myUser</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="n">extraGroups</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&#34;plugdev&#34;</span> <span class="p">];</span>
-<span class="o">...</span>
-  <span class="p">};</span>
-<span class="p">};</span>
-</code></pre></div><h1 id="add-extra-rules-for-udev">Add extra rules for udev</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-nix" data-lang="nix"><span class="line"><span class="cl"><span class="n">users</span><span class="o">.</span><span class="n">users</span> <span class="err">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl">  <span class="n">myUser</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">extraGroups</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">&#34;plugdev&#34;</span> <span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl">  <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><h1 id="add-extra-rules-for-udev">Add extra rules for udev</h1>
 <p>Ledger provides udev rules which need to be added kind of hidden (linux -&gt; Troubleshooting -&gt; Option 3) <a href="https://support.ledger.com/hc/en-us/articles/115005165269-Fix-connection-issues">on their website</a>. You can check out my NixOS config containing these rules <a href="https://github.com/va1entin/nixos-config/blob/master/ledger.nix">on GitHub</a>. I&rsquo;ve decided to not statically post them here and instead refer to the GitHub mirror of my NixOS config, because they might change with Ledger firmware updates. You must change &ldquo;val&rdquo; to your username.</p>
 <p>I&rsquo;m not entirely sure whether it&rsquo;s really necessary but I reload the rules after I&rsquo;ve changed them and rebuilt NixOS just to make sure they are being applied:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">udevadm trigger
-udevadm control --reload-rules
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">udevadm trigger
+</span></span><span class="line"><span class="cl">udevadm control --reload-rules
+</span></span></code></pre></div>
         <br>
       </div>
     </div>

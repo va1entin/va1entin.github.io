@@ -3,7 +3,7 @@
 <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="Why Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&amp;rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&amp;rsquo;s how that works."><meta name="author" content="Valentin Heidelberger">
 
-<link rel="canonical" href="https://valh.io/p/raspberry-pi-configure-wlan/wifi-ssh-before-first-boot/">
+<link rel="canonical" href="https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/">
 
 
 <link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
@@ -130,14 +130,28 @@
         <h1 id="why">Why</h1>
 <p>Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&rsquo;s how that works.</p>
 <h1 id="how">How</h1>
-<p><strong>Having flashed the Raspbian image onto your Pi</strong>, use your file explorer or terminal to move to a newly created partition called <strong>&ldquo;boot&rdquo;</strong> on the micro SD card. Create a file called <strong>wpa_supplicant.conf</strong> in the root of that partition and paste the following contents in there. Change the <em>country</em> parameter as well as the <em>ssid</em> and <em>psk</em> accordingly and save the file:</p>
-<pre><code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+<p><strong>Having flashed the Raspbian image onto your Pi</strong>, use your file explorer or terminal to move to a newly created partition called <strong>&ldquo;boot&rdquo;</strong> on the micro SD card.</p>
+<p>Create a file called <strong>wpa_supplicant.conf</strong> in the root of that partition and paste the contents corresponding to the WPA version you&rsquo;re using.</p>
+<p>Change the <em>country</em> parameter as well as the <em>ssid</em> and <em>psk</em> accordingly and save the file:</p>
+<h2 id="wpa3--wpa2-mixed-network">WPA3 / WPA2 mixed network</h2>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=US
 
 network={
-     ssid=&quot;Your network name/SSID&quot;
-     psk=&quot;Your WPA/WPA2 security key&quot;
+     ssid=&#34;Your network name/SSID&#34;
+     psk=&#34;Your WPA security key&#34;
+     key_mgmt=WPA-PSK-SHA256
+     ieee80211w=2
+}
+</code></pre><h2 id="wpa2-only-network">WPA2-only network</h2>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+     ssid=&#34;Your network name/SSID&#34;
+     psk=&#34;Your WPA security key&#34;
      key_mgmt=WPA-PSK
 }
 </code></pre><p>Having created the config for WLAN, create another (empty) file simply called <strong>ssh</strong> in the <strong>&ldquo;boot&rdquo;</strong> partition. If you&rsquo;re on Windows, make sure that both <strong>ssh</strong> and <strong>wpa_supplicant.conf</strong> don&rsquo;t have any other extension such as <em>.txt</em>.</p>

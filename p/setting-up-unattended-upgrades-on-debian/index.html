@@ -141,63 +141,63 @@ Of course you don&rsquo;t want to login to such a system regularly and install p
 I&rsquo;ll tell you how to set unattended upgrades up on Debian and walk you through some config parameters that I find very useful.</p>
 <h1 id="how">How</h1>
 <p>Firstly, you need to install the unattended-upgrades pkg:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">apt install unattended-upgrades
-</code></pre></div><p>unattended-upgrades is run automatically by the cronjob <em>/etc/cron.daily/apt-compat</em>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">apt install unattended-upgrades
+</span></span></code></pre></div><p>unattended-upgrades is run automatically by the cronjob <em>/etc/cron.daily/apt-compat</em>.</p>
 <h2 id="the-config-file">The config file</h2>
 <p>Now let&rsquo;s have a look at the config file:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">vim /etc/apt/apt.conf.d/50unattended-upgrades
-</code></pre></div><p>The config file might look a bit messy at first due to a LOT of comments and the (in my opinion) unaesthetic apt config syntax.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">vim /etc/apt/apt.conf.d/50unattended-upgrades
+</span></span></code></pre></div><p>The config file might look a bit messy at first due to a LOT of comments and the (in my opinion) unaesthetic apt config syntax.
 The most interesting part to begin with is the &ldquo;Origins-Pattern&rdquo;:</p>
-<pre><code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
-      &quot;o=Debian,a=stable&quot;;
-      &quot;o=Debian,a=stable-updates&quot;;
-      &quot;o=Debian,a=proposed-updates&quot;;
-      &quot;origin=Debian,codename=${distro_codename},label=Debian-Security&quot;;
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
+      &#34;o=Debian,a=stable&#34;;
+      &#34;o=Debian,a=stable-updates&#34;;
+      &#34;o=Debian,a=proposed-updates&#34;;
+      &#34;origin=Debian,codename=${distro_codename},label=Debian-Security&#34;;
 };
 </code></pre><h2 id="defining-package-origins">Defining package origins</h2>
 <p>The Origins-Pattern defines from where unattended-upgrades will install upgrades. If an origin is missing here, package upgrades from there will be ignored. Which origins to configure here is totally up to you of course. Maybe you have installed some exotic PPA, which you always want to upgrade manually?
 To find out how to configure the origins you want, you can have a look at apt&rsquo;s lists:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">val@pi:~ $ ls /var/lib/apt/lists/ <span class="p">|</span> grep InRelease
-archive.raspberrypi.org_debian_dists_stretch_InRelease
-raspbian.raspberrypi.org_raspbian_dists_stretch_InRelease
-</code></pre></div><p>These InRelease files provide the information you need. To find out their origin and suite (o= and a=), use the grep command:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">val@pi:~ $ grep -E <span class="s1">&#39;(Origin|Suite)&#39;</span> /var/lib/apt/lists/archive.raspberrypi.org_debian_dists_stretch_InRelease
-Origin: Raspberry Pi Foundation
-Suite: stable
-</code></pre></div><p>So the origin of this particular apt list is &ldquo;Raspberry Pi Foundation&rdquo; and it&rsquo;s suite is &ldquo;stable&rdquo;. To configure this for unattended-upgrades, you&rsquo;d adapt the config to look as follows:</p>
-<pre><code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
-      &quot;o=Raspberry Pi Foundation,a=stable&quot;;
-      &quot;o=Raspbian,a=stable&quot;;
-      &quot;o=Debian,a=stable&quot;;
-      &quot;o=Debian,a=stable-updates&quot;;
-      &quot;o=Debian,a=proposed-updates&quot;;
-      &quot;origin=Debian,codename=${distro_codename},label=Debian-Security&quot;;
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">val@pi:~ $ ls /var/lib/apt/lists/ <span class="p">|</span> grep InRelease
+</span></span><span class="line"><span class="cl">archive.raspberrypi.org_debian_dists_stretch_InRelease
+</span></span><span class="line"><span class="cl">raspbian.raspberrypi.org_raspbian_dists_stretch_InRelease
+</span></span></code></pre></div><p>These InRelease files provide the information you need. To find out their origin and suite (o= and a=), use the grep command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">val@pi:~ $ grep -E <span class="s1">&#39;(Origin|Suite)&#39;</span> /var/lib/apt/lists/archive.raspberrypi.org_debian_dists_stretch_InRelease
+</span></span><span class="line"><span class="cl">Origin: Raspberry Pi Foundation
+</span></span><span class="line"><span class="cl">Suite: stable
+</span></span></code></pre></div><p>So the origin of this particular apt list is &ldquo;Raspberry Pi Foundation&rdquo; and it&rsquo;s suite is &ldquo;stable&rdquo;. To configure this for unattended-upgrades, you&rsquo;d adapt the config to look as follows:</p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Unattended-Upgrade::Origins-Pattern {
+      &#34;o=Raspberry Pi Foundation,a=stable&#34;;
+      &#34;o=Raspbian,a=stable&#34;;
+      &#34;o=Debian,a=stable&#34;;
+      &#34;o=Debian,a=stable-updates&#34;;
+      &#34;o=Debian,a=proposed-updates&#34;;
+      &#34;origin=Debian,codename=${distro_codename},label=Debian-Security&#34;;
 };
 </code></pre><h2 id="defining-package-blacklist">Defining package blacklist</h2>
 <p>If you don&rsquo;t want to upgrade certain packages from a defined origin automatically, you can put them in the blacklist, that should already be in the config file:</p>
-<pre><code class="language-conf" data-lang="conf">Unattended-Upgrade::Package-Blacklist {
-//      &quot;vim&quot;;
-//      &quot;libc6&quot;;
-//      &quot;libc6-dev&quot;;
-//      &quot;libc6-i686&quot;;
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Unattended-Upgrade::Package-Blacklist {
+//      &#34;vim&#34;;
+//      &#34;libc6&#34;;
+//      &#34;libc6-dev&#34;;
+//      &#34;libc6-i686&#34;;
 };
 </code></pre><h2 id="automatically-remove-unused-dependencies-autoremove">Automatically remove unused dependencies (autoremove)</h2>
 <p>To automatically remove unused dependencies, set the following config parameter to true:</p>
-<pre><code class="language-conf" data-lang="conf">Unattended-Upgrade::Remove-Unused-Dependencies &quot;false&quot;;
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Unattended-Upgrade::Remove-Unused-Dependencies &#34;false&#34;;
 </code></pre><h2 id="automatically-reboot">Automatically reboot</h2>
 <p>Some packages require a reboot. You probably want to control when that happens. In my case the pi reboots at 2 AM, when everyone&rsquo;s usually asleep, if needed.</p>
-<pre><code class="language-conf" data-lang="conf">Unattended-Upgrade::Automatic-Reboot-Time &quot;02:00&quot;;
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Unattended-Upgrade::Automatic-Reboot-Time &#34;02:00&#34;;
 </code></pre><h1 id="debugging">Debugging</h1>
 <p>unattended-upgrades offers a debug parameter, that makes debugging very easy. With <em>&ndash;apt-debug</em> and <em>&ndash;verbose</em> you can get even more debug output.
 To debug previous runs of unattended-upgrades, check the log files: <em>/var/log/unattended-upgrades/unattended-upgrades.log</em> and <em>/var/log/unattended-upgrades/unattended-upgrades-dpkg.log</em>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">val@pi:~ $ sudo unattended-upgrades --dry-run --debug
-sudo: unable to resolve host pi
-Initial blacklisted packages:
-Initial whitelisted packages:
-Starting unattended upgrades script
-Allowed origins are: <span class="o">[</span><span class="s1">&#39;o=Raspberry Pi Foundation,a=stable&#39;</span>, <span class="s1">&#39;o=Raspbian,a=stable&#39;</span>, <span class="s1">&#39;o=Debian,a=stable&#39;</span>, <span class="s1">&#39;o=Debian,a=stable-updates&#39;</span>, <span class="s1">&#39;o=Debian,a=proposed-updates&#39;</span>, <span class="s1">&#39;origin=Debian,codename=stretch,label=Debian-Security&#39;</span><span class="o">]</span>
-...
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">val@pi:~ $ sudo unattended-upgrades --dry-run --debug
+</span></span><span class="line"><span class="cl">sudo: unable to resolve host pi
+</span></span><span class="line"><span class="cl">Initial blacklisted packages:
+</span></span><span class="line"><span class="cl">Initial whitelisted packages:
+</span></span><span class="line"><span class="cl">Starting unattended upgrades script
+</span></span><span class="line"><span class="cl">Allowed origins are: <span class="o">[</span><span class="s1">&#39;o=Raspberry Pi Foundation,a=stable&#39;</span>, <span class="s1">&#39;o=Raspbian,a=stable&#39;</span>, <span class="s1">&#39;o=Debian,a=stable&#39;</span>, <span class="s1">&#39;o=Debian,a=stable-updates&#39;</span>, <span class="s1">&#39;o=Debian,a=proposed-updates&#39;</span>, <span class="s1">&#39;origin=Debian,codename=stretch,label=Debian-Security&#39;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></div>
         <br>
       </div>
     </div>

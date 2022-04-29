@@ -160,8 +160,8 @@ Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain reg
 <p>I&rsquo;ve written a Python script, based on a bash script by <a href="https://gist.github.com/benkulbertis/fff10759c2391b6618dd">benkulbertis</a>.</p>
 <p>The Python script does <em>not</em> require a general API token. So you can set up API tokens specifically authorized for what the script needs to do.</p>
 <p>You can get the script <a href="https://github.com/va1entin/tools/blob/master/cloudflare_update_record/cloudflare_update_record.py">here</a>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare_update_record/cloudflare_update_record.py
-</code></pre></div><h2 id="setting-up-api-tokens">Setting up API tokens</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://raw.githubusercontent.com/va1entin/tools/master/cloudflare_update_record/cloudflare_update_record.py
+</span></span></code></pre></div><h2 id="setting-up-api-tokens">Setting up API tokens</h2>
 <p>The script needs two tokens:</p>
 <ul>
 <li>one to read DNS records and settings</li>
@@ -222,31 +222,31 @@ Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain reg
 <p>Click <a href="/img/posts/cloudflare_read_token.webp">here</a> for a screenshot.</p>
 <h2 id="create-config-file">Create config file</h2>
 <p>The script uses a YAML-format config file and assumes it at <code>./cloudflare_update_record_config.yaml</code>. You can give a different path using the <code>-c | --config</code> parameter.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">read_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR READ TOKEN&gt;&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">edit_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR EDIT TOKEN&gt;&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR ZONE NAME&gt;&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">record_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR RECORD NAME&gt;&#34;</span><span class="w">
-</span></code></pre></div><p>So if I wanted to change a DNS record called <em>hello.example.com</em> using a read token <em>foo</em> and an edit token <em>bar</em>, the config would look like this:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">read_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;foo&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">edit_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bar&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;example.com&#34;</span><span class="w">
-</span><span class="w"></span><span class="nt">record_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;hello&#34;</span><span class="w">
-</span></code></pre></div><h2 id="run-script">Run script</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">read_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR READ TOKEN&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">edit_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR EDIT TOKEN&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR ZONE NAME&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">record_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;YOUR RECORD NAME&gt;&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>So if I wanted to change a DNS record called <em>hello.example.com</em> using a read token <em>foo</em> and an edit token <em>bar</em>, the config would look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">read_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;foo&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">edit_token</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bar&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;example.com&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">record_name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;hello&#34;</span><span class="w">
+</span></span></span></code></pre></div><h2 id="run-script">Run script</h2>
 <p>Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">./cloudflare_update_record.py -h
-</code></pre></div><h3 id="logging">Logging</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./cloudflare_update_record.py -h
+</span></span></code></pre></div><h3 id="logging">Logging</h3>
 <p>The scripts logs to <code>cloudflare_update_record.log</code> with log level <code>info</code> by default. You can change the log file and log level, see <code>-h</code>.</p>
 <h3 id="ip-provider">IP provider</h3>
 <p>It gets the external IP address from a <em>provider</em>, by default: <a href="https://icanhazip.com">icanhazip.com</a></p>
 <p>You can specify a different provider, see <code>-h</code>.
 The provider must return <strong>just the IP address as plain text</strong> on a <code>HTTP GET</code> request - no additional HTML or anything else. Assuming an external IPv4 address <code>1.1.1.1</code>, it should look like this, when tested with curl:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># curl https://ipv4.icanhazip.com</span>
-1.1.1.1
-</code></pre></div><h2 id="update-a-dns-a-ipv4-record">Update a DNS A (IPv4) record</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare_update_record.py -4
-</code></pre></div><h2 id="update-a-dns-aaaa-ipv6-record">Update a DNS AAAA (IPv6) record</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">cloudflare_update_record.py -6
-</code></pre></div><p>Check the log for a message <code>INFO: DNS A record update succeeded, IP changed to: &lt;YOUR IP ADDRESS&gt;</code>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># curl https://ipv4.icanhazip.com</span>
+</span></span><span class="line"><span class="cl">1.1.1.1
+</span></span></code></pre></div><h2 id="update-a-dns-a-ipv4-record">Update a DNS A (IPv4) record</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cloudflare_update_record.py -4
+</span></span></code></pre></div><h2 id="update-a-dns-aaaa-ipv6-record">Update a DNS AAAA (IPv6) record</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cloudflare_update_record.py -6
+</span></span></code></pre></div><p>Check the log for a message <code>INFO: DNS A record update succeeded, IP changed to: &lt;YOUR IP ADDRESS&gt;</code>
 and remember that it might take up to 24 hours for your DNS update to be propagated around the world.</p>
 
         <br>

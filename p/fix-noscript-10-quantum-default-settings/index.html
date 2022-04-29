@@ -122,38 +122,38 @@ Another weird default setting are the &ldquo;default&rdquo; permissions for webs
 <p><em>Untrusted</em> = Nothing</p>
 <p>Since every site, that is not explicitly <em>trusted</em> or <em>untrusted</em>, gets assigned the &ldquo;<em>default</em>&rdquo; state, it is allowed to do <strong>some things</strong> and it&rsquo;s not even entirely clear what these are (&ldquo;other&rdquo;).</p>
 <p>So I modified the default config, to not allow anything by default and also not trust or untrust any website. You can import this config either by downloading <a href="/attachments/noscript_clean_config.txt">this file</a> and using the <em>import</em> button on the NoScript options page to upload it or by copy pasting the following JSON into the text field that appears at the bottom of the page when the &ldquo;Debug&rdquo; checkbox is activated:</p>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
-  <span class="nt">&#34;DEFAULT&#34;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
-  <span class="p">},</span>
-  <span class="nt">&#34;TRUSTED&#34;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[</span>
-      <span class="s2">&#34;script&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;object&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;media&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;frame&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;font&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;webgl&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;fetch&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;other&#34;</span>
-    <span class="p">],</span>
-    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
-  <span class="p">},</span>
-  <span class="nt">&#34;UNTRUSTED&#34;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
-  <span class="p">},</span>
-  <span class="nt">&#34;sites&#34;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&#34;trusted&#34;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&#34;untrusted&#34;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&#34;custom&#34;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="p">[]</span>
-  <span class="p">},</span>
-  <span class="nt">&#34;enforced&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nt">&#34;autoAllowTop&#34;</span><span class="p">:</span> <span class="kc">false</span>
-<span class="p">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;DEFAULT&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;TRUSTED&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;script&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;media&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;frame&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;font&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;webgl&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;fetch&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;other&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;UNTRUSTED&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;capabilities&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;sites&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;trusted&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;untrusted&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;custom&#34;</span><span class="p">:</span> <span class="p">{},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;temp&#34;</span><span class="p">:</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;enforced&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;autoAllowTop&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
         <br>
       </div>
     </div>

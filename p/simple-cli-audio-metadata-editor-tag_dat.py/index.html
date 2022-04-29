@@ -126,15 +126,15 @@ tag_dat.py iterates over a file or all files in a given path (default: current p
         <p>Audio metadata is often not particularly easy to manage in a simple and quick manner. There&rsquo;s lots of tools providing this feature but many of them have a ton of other additional functionality or are full-on music library managers. I wanted a very simple command-line tool to quickly change the title, artist and album tags of audio metadata - the result is &ldquo;tag_dat.py&rdquo; and available in my <a href="https://github.com/va1entin/tools/tree/master/tag_dat">tools repository</a>.</p>
 <p>tag_dat.py iterates over a file or all files in a given path (default: current path), sets the filename (without file ending) as <em>title</em> and given arguments <em>album</em> and <em>artist</em> as audio tags. The script uses the amazing &ldquo;mutagen&rdquo; library under the hood.</p>
 <p>Here are a few usage examples:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># Set MyArtist and MyAlbum for all files in current path</span>
-./tag_dat.py -ar MyArtist -al MyAlbum
-
-<span class="c1"># Set MyArtist and MyAlbum for my_file.mp3</span>
-./tag_dat.py -ar MyArtist -al MyAlbum -f my_file.mp3
-
-<span class="c1"># Set MyArtist and MyAlbum for all files in path music/MyAlbum/</span>
-./tag_dat.py -ar MyArtist -al MyAlbum -p music/MyAlbum/
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Set MyArtist and MyAlbum for all files in current path</span>
+</span></span><span class="line"><span class="cl">./tag_dat.py -ar MyArtist -al MyAlbum
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Set MyArtist and MyAlbum for my_file.mp3</span>
+</span></span><span class="line"><span class="cl">./tag_dat.py -ar MyArtist -al MyAlbum -f my_file.mp3
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Set MyArtist and MyAlbum for all files in path music/MyAlbum/</span>
+</span></span><span class="line"><span class="cl">./tag_dat.py -ar MyArtist -al MyAlbum -p music/MyAlbum/
+</span></span></code></pre></div>
         <br>
       </div>
     </div>

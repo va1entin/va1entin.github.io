@@ -139,9 +139,9 @@ Why I have experimented a lot with camera software for the Raspberry Pi. One pro
 <h1 id="installation-and-how-it-works">Installation and how it works</h1>
 <p>Please have a look at the <a href="https://github.com/va1entin/plasm/blob/master/README.md">README</a> to find out how to use plasm.</p>
 <p>Plasm is currently not available via PyPi, but you can install it directly from Github as follows:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">wget https://github.com/va1entin/plasm/archive/refs/heads/master.zip -O plasm-master.zip
-pip3 install plasm-master.zip
-</code></pre></div><h1 id="integration-with-motioneye">Integration with motionEye</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://github.com/va1entin/plasm/archive/refs/heads/master.zip -O plasm-master.zip
+</span></span><span class="line"><span class="cl">pip3 install plasm-master.zip
+</span></span></code></pre></div><h1 id="integration-with-motioneye">Integration with motionEye</h1>
 <p>The integration with motionEye currently requires a little patch to be applied to it&rsquo;s <code>uploadservices.py</code>, which is located at <code>/usr/local/lib/python2.7/dist-packages/motioneye/uploadservices.py</code> on Raspbian. You can download it directly <a href="https://github.com/va1entin/plasm/raw/master/integrations/motioneye-uploadservices.patch">here</a> (right click -&gt; save as).</p>
 <p>Make sure to change the path to your public key accordingly and add <code>remove_input_file=True</code> as shown in the <a href="https://github.com/va1entin/plasm/blob/master/README.md">README</a>, if you want plasm to remove the unencrypted input file once encryption is finished.</p>
 <p>Plasm also logs what it&rsquo;s doing using the logging module by default. Most logging happens at debug log level currently. Have a look at the <a href="https://github.com/ccrisan/motioneye/wiki/Configuration-File">motionEye wiki</a> to find out how to enable debug logging.</p>

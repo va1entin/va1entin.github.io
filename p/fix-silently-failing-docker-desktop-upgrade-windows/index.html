@@ -141,8 +141,8 @@ The cause seems to be some kind of privilege problem with the Docker service run
 <p>The cause seems to be some kind of privilege problem with the Docker service running in the background. Here is a workaround that works nicely for me.</p>
 <h1 id="stop-docker-service">Stop docker service</h1>
 <p>Start a command line such as PowerShell as admin and run the following command to stop the docker service (this will stop any running containers!)</p>
-<div class="highlight"><pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">net</span> <span class="n">stop</span> <span class="n">com</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">service</span>
-</code></pre></div><h1 id="run-installer">Run installer</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">net</span> <span class="n">stop</span> <span class="n">com</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+</span></span></code></pre></div><h1 id="run-installer">Run installer</h1>
 <p>Download the most recent version of Docker Desktop from <a href="https://www.docker.com/products/docker-desktop">docker.com</a> and run the installer, once the previous step was executed successfully.</p>
 <p>The update should work now.</p>
 
