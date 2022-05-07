@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="The tool AutoDarkMode is a great open source tool to automatically switch between dark and light themes on Windows. You can set custom hours, switch manually or use sunset and sunrise from your location.
+You can download it and contribute here on GitHub.
+It can also change your wallpaper to a light or dark one - but only on one screen. Since I have a dual screen setup and a soft spot for ultra-wide wallpapers, there had to be a way!"><meta name="author" content="Valentin Heidelberger">
+
+<link rel="canonical" href="https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/">
+
+
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+<title>Windows Auto Dark Mode - Change multi-screen wallpaper</title>
+
+
+<link rel="stylesheet" href="/css/styles.css" />
+
+
+<link rel="stylesheet" href="/css/syntax.css" />
+
+
+<link id="custom_css" href="/css/custom.css" rel="stylesheet">
+
+
+<link id="dark_css" href="/css/dark.css" rel="prefetch">
+
+
+
+
+<script src="/js/toggle_theme.js"></script>
+
+
+
+<script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="/index.html">Valentin Heidelberger</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" title="Blog" href="/index.html">
+            <span class="fa fa-book-open"></span>
+            <span> Blog</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a href="/search/" class="nav-link px-lg-3 py-3 py-lg-4" title="Search">
+            <span class="fa fa-search nav-search-icon"></span>
+            <span> Search</span>
+          </a>
+        </li>
+        
+        
+          <li class="nav-item" onclick="toggle()">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
+              <span class="fa fa-adjust"></span>
+              <span> Theme</span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+  
+
+<header class="masthead" style="background-image: url('/img/blog-bg.webp')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+          
+          
+          <div class="post-heading">
+            <h1>Windows Auto Dark Mode - Change multi-screen wallpaper</h1>
+            <h2 class="subheading"></h2>
+            <span class="meta">Posted by Valentin Heidelberger on May 6, 2022</span>
+            
+            <span class="meta"> Tags:
+              
+              <a href="/tags/windows">
+                    <i class="fa fa-tag"></i>
+                    windows
+                  </a>
+                  
+              <a href="/tags/technology">
+                    <i class="fa fa-tag"></i>
+                    technology
+                  </a>
+                  
+                </span>
+                
+              </div>
+              
+        </div>
+      </div>
+    </div>
+</header>
+  
+
+<article class="mb4">
+  
+<aside id="custom_toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#the-tool">The tool</a></li>
+    <li><a href="#download-set-windows-wallpaper-script">Download set-windows-wallpaper script</a></li>
+    <li><a href="#change-powershell-executionpolicy">Change Powershell ExecutionPolicy</a></li>
+    <li><a href="#configure-autodarkmode-to-run-script">Configure AutoDarkMode to run script</a></li>
+    <li><a href="#test-it">Test it</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <h1 id="the-tool">The tool</h1>
+<p><strong>AutoDarkMode</strong> is a great open source tool to automatically switch between dark and light themes on Windows. You can set custom hours, switch manually or use sunset and sunrise from your location.</p>
+<p>You can download it and contribute <a href="https://github.com/AutoDarkMode/Windows-Auto-Night-Mode">here on GitHub</a>.</p>
+<p>It can also change your wallpaper to a light or dark one - <em>but only on one screen</em>. Since I have a dual screen setup and a soft spot for ultra-wide wallpapers, there had to be a way!</p>
+<p>Luckily, AutoDarkMode can call custom scripts on a light/dark switch event. With a simple PowerShell script, which I have adapted from a PowerShell function shared by <a href="https://www.joseespitia.com/2017/09/15/set-wallpaper-powershell-function/">Jose Espitia</a>, we can set a given file as wallpaper in a certain mode (span in my case).</p>
+<h1 id="download-set-windows-wallpaper-script">Download set-windows-wallpaper script</h1>
+<p>The script can be found <a href="https://github.com/va1entin/tools/tree/master/set-windows-wallpaper">on GitHub</a>. You can clone the repo or download the file directly <a href="https://raw.githubusercontent.com/va1entin/tools/master/set-windows-wallpaper/set-windows-wallpaper.ps1">here</a> (right-click -&gt; save as).</p>
+<p>Once downloaded, put the script into the location you want to keep it in permanently. This can be any folder you like really. I&rsquo;ve put it into <code>Documents</code>.</p>
+<p>The script can also set wallpapers in other modes - feel free to have a look into it, if you&rsquo;re interested in that.</p>
+<h1 id="change-powershell-executionpolicy">Change Powershell ExecutionPolicy</h1>
+<p>To run custom scripts, you need to change Powershell&rsquo;s ExecutionPolicy. Start a Powershell as admin and run the following, answering <code>[Y]</code> when asked whether changes shall be made:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="nb">Set-ExecutionPolicy</span> <span class="n">-ExecutionPolicy</span> <span class="n">RemoteSigned</span>
+</span></span></code></pre></div><p>At this point you may test whether the script works. Run the following in Powershell. Make sure to adapt the path to the script and image to your setup.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">C:</span><span class="p">\</span><span class="n">Users</span><span class="p">\</span><span class="n">val</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="nb">set-windows</span><span class="n">-wallpaper</span><span class="p">.</span><span class="n">ps1</span> <span class="o">-File</span> <span class="n">C:</span><span class="p">\</span><span class="n">Users</span><span class="p">\</span><span class="n">val</span><span class="p">\</span><span class="n">Pictures</span><span class="p">\</span><span class="n">Wallpaper</span><span class="p">\</span><span class="nb">wallpaper-day</span><span class="p">.</span><span class="n">jpg</span> <span class="n">-Style</span> <span class="n">Span</span>
+</span></span></code></pre></div><h1 id="configure-autodarkmode-to-run-script">Configure AutoDarkMode to run script</h1>
+<p>With the script in place and running successfully, you can configure AutoDarkMode to run it. Right-click on the AutoDarkMode icon in the system tray and click <strong>Open config directory</strong>.</p>
+<p>In the config directory, open the file <code>scripts.yaml</code> and add the following to it. The file should already contain an example for a script. You can just delete that or comment it out for reference.</p>
+<p>Make sure to replace the paths to the script and your desired light and dark images!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">Enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">Component</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">TimeoutMillis</span><span class="p">:</span><span class="w"> </span><span class="m">10000</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">Scripts</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l">Span wallpaper change</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">Command</span><span class="p">:</span><span class="w"> </span><span class="l">Powershell</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ArgsLight</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="l">C:\Users\val\Documents\set-windows-wallpaper.ps1, -File, C:\Users\val\Pictures\Wallpaper\wallpaper-day.jpg, -Style, Span]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ArgsDark</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="l">C:\Users\val\Documents\set-windows-wallpaper.ps1, -File, C:\Users\val\Pictures\Wallpaper\wallpaper-night.jpg, -Style, Span]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">AllowedSources</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="l">Any]</span><span class="w">
+</span></span></span></code></pre></div><p>See the <a href="https://github.com/AutoDarkMode/Windows-Auto-Night-Mode/wiki/How-to-add-custom-scripts">AutoDarkMode wiki</a> for reference on adding custom scripts.</p>
+<h1 id="test-it">Test it</h1>
+<p>Now, you can test the script through AutoDarkMode by forcing a switch to the light and dark theme. Right-click on the AutoDarkMode icon in system tray and click the corresponding command. Your span wallpaper should change as configured.</p>
+<p>If it doesn&rsquo;t, make sure that the script works when run directly and that the config in <code>scripts.yaml</code> is correct. You can also consult the <code>service.log</code> file written by AutoDarkMode. It was very helpful in developing this script!</p>
+
+        <br>
+      </div>
+    </div>
+  </div>
+</article>
+
+  
+<footer class="border-top">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="/index.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                    <i class="far fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-rss fa-stack-1x"></i>
+                </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/va1entin" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+        <li class="list-inline-item">
+          <a href="https://gitlab.com/va1entin" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-gitlab fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-linkedin fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-xing fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        <div class="small text-center text-muted fst-italic">
+        
+            <br>
+            <br>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2022
+            <br>
+            This applies to the contents of my blog and other texts on this site only.
+            <br>
+            <a href="/terms-of-use">Terms of use</a>
+            <br>
+            Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+        
+        </div>
+        </ul>
+        <br>
+        <br>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="/js/scripts.js"></script>
+</body>
+</html>

@@ -6,7 +6,18 @@
     <description>Recent content in technology on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 29 Apr 2022 12:34:45 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 May 2022 14:43:17 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows Auto Dark Mode - Change multi-screen wallpaper</title>
+      <link>https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/</link>
+      <pubDate>Fri, 06 May 2022 14:43:17 +0000</pubDate>
+      
+      <guid>https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/</guid>
+      <description>The tool AutoDarkMode is a great open source tool to automatically switch between dark and light themes on Windows. You can set custom hours, switch manually or use sunset and sunrise from your location.
+You can download it and contribute here on GitHub.
+It can also change your wallpaper to a light or dark one - but only on one screen. Since I have a dual screen setup and a soft spot for ultra-wide wallpapers, there had to be a way!</description>
+    </item>
+    
     <item>
       <title>Workaround for broken DNS in WSL2</title>
       <link>https://valh.io/p/workaround-for-broken-dns-in-wsl2/</link>
