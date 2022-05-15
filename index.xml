@@ -604,53 +604,6 @@ Replace &lt;em&gt;myUser&lt;/em&gt; with your user name.&lt;/p&gt;
 </description>
         </item>
         <item>
-        <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
-        <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
-        <pubDate>Mon, 10 Sep 2018 19:31:23 +0000</pubDate>
-        
-        <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
-        <description>
- &lt;h1 id=&#34;why&#34;&gt;Why&lt;/h1&gt;
-&lt;p&gt;Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&amp;rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&amp;rsquo;s how that works.&lt;/p&gt;
-&lt;h1 id=&#34;how&#34;&gt;How&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Having flashed the Raspbian image onto your Pi&lt;/strong&gt;, use your file explorer or terminal to move to a newly created partition called &lt;strong&gt;&amp;ldquo;boot&amp;rdquo;&lt;/strong&gt; on the micro SD card.&lt;/p&gt;
-&lt;p&gt;Create a file called &lt;strong&gt;wpa_supplicant.conf&lt;/strong&gt; in the root of that partition and paste the contents corresponding to the WPA version you&amp;rsquo;re using.&lt;/p&gt;
-&lt;p&gt;Change the &lt;em&gt;country&lt;/em&gt; parameter as well as the &lt;em&gt;ssid&lt;/em&gt; and &lt;em&gt;psk&lt;/em&gt; accordingly and save the file:&lt;/p&gt;
-&lt;h2 id=&#34;wpa3--wpa2-mixed-network&#34;&gt;WPA3 / WPA2 mixed network&lt;/h2&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=US
-
-network={
-     ssid=&amp;#34;Your network name/SSID&amp;#34;
-     psk=&amp;#34;Your WPA security key&amp;#34;
-     key_mgmt=WPA-PSK-SHA256
-     ieee80211w=2
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;wpa2-only-network&#34;&gt;WPA2-only network&lt;/h2&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=US
-
-network={
-     ssid=&amp;#34;Your network name/SSID&amp;#34;
-     psk=&amp;#34;Your WPA security key&amp;#34;
-     key_mgmt=WPA-PSK
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Having created the config for WLAN, create another (empty) file simply called &lt;strong&gt;ssh&lt;/strong&gt; in the &lt;strong&gt;&amp;ldquo;boot&amp;rdquo;&lt;/strong&gt; partition. If you&amp;rsquo;re on Windows, make sure that both &lt;strong&gt;ssh&lt;/strong&gt; and &lt;strong&gt;wpa_supplicant.conf&lt;/strong&gt; don&amp;rsquo;t have any other extension such as &lt;em&gt;.txt&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Once the files are saved, eject the SD card safely, put it in your Pi and boot it up. You should be able to connect via SSH using the default user &lt;em&gt;pi&lt;/em&gt; and password &lt;em&gt;raspberry&lt;/em&gt; shortly after.&lt;/p&gt;
-&lt;h1 id=&#34;pi-appears-on-network-but-login-via-ssh-doesnt-work&#34;&gt;Pi appears on network but login via SSH doesn&amp;rsquo;t work&lt;/h1&gt;
-&lt;p&gt;The process outlined in this article has always worked on my Raspberry Pi 4 and Zero W. On my old Pi 1 B+ however, it usually does not work - at least not without manual intervention!&lt;/p&gt;
-&lt;p&gt;The Pi 1 would appear on the network and be &lt;em&gt;reachable&lt;/em&gt; via SSH but &lt;em&gt;login&lt;/em&gt; was not possible with the usual pi / raspberry credentials. The problem being that this default user had not yet been properly created.&lt;/p&gt;
-&lt;p&gt;After having added the files as described above, I had to connect the Pi to a monitor, boot it up and wait&amp;hellip;&lt;/p&gt;
-&lt;p&gt;It took at least 30 seconds after the systemd boot was finished for a prompt to appear - so be patient. The prompt then went straight into an interactive wizard which asked about language, keyboard layout and also created the user. Only after completing this wizard, I was able to login via SSH with the default user.&lt;/p&gt;
-&lt;p&gt;I&amp;rsquo;m not sure why this is happening. On multiple tries, I also got a varying amount of steps in the wizard, sometimes more, sometimes fewer.&lt;/p&gt;
-&lt;p&gt;According to some folks in the Raspberry Pi forums, zeroing the SD card before flashing the Raspberry Pi OS image is supposed to help. In my case it didn&amp;rsquo;t but I&amp;rsquo;m still document the command for you to try.&lt;/p&gt;
-&lt;p&gt;Replace &lt;strong&gt;/dev/sdg&lt;/strong&gt; with your SD card!&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo dd &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&#34;nv&#34;&gt;of&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/dev/sdg &lt;span class=&#34;nv&#34;&gt;bs&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;8192&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;progress
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-        </item>
-        <item>
         <title>Simple file encryption module for Python projects</title>
         <link>https://valh.io/p/simple-file-encryption-module-for-python-projects/</link>
         <pubDate>Sat, 08 Sep 2018 11:40:23 +0000</pubDate>

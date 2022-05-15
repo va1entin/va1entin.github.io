@@ -91,15 +91,6 @@ Another interesting thing regarding Nextcloud and UCS happened in the meantime t
     </item>
     
     <item>
-      <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
-      <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
-      <pubDate>Mon, 10 Sep 2018 19:31:23 +0000</pubDate>
-      
-      <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
-      <description>Why Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&amp;rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&amp;rsquo;s how that works.</description>
-    </item>
-    
-    <item>
       <title>Setting up unattended upgrades on Debian</title>
       <link>https://valh.io/p/setting-up-unattended-upgrades-on-debian/</link>
       <pubDate>Sat, 25 Aug 2018 12:30:21 +0000</pubDate>

@@ -17,14 +17,5 @@
 Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain registrar. For a system with an external IPv4 address that changes daily I needed a way to dynamically update a DNS record at Cloudflare with the system&amp;rsquo;s current external IP address.</description>
     </item>
     
-    <item>
-      <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
-      <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
-      <pubDate>Mon, 10 Sep 2018 19:31:23 +0000</pubDate>
-      
-      <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
-      <description>Why Lots of Raspberry Pis are used for purposes requiring a wireless network connection. Configuring WLAN for the Pi requires a config file including the network&amp;rsquo;s name and access keys. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just create the config file before even booting the Pi for the first time. Here&amp;rsquo;s how that works.</description>
-    </item>
-    
   </channel>
 </rss>
