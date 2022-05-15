@@ -2,7 +2,7 @@
 author: Valentin Heidelberger
 comments: false
 date: "2021-06-11T19:21:36Z"
-header_img: /img/tags/homeassistant.webp
+header_img: /img/tags/home.webp
 subtitle: ""
 tags:
 - technology

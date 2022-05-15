@@ -30,7 +30,7 @@ params:
         cheatsheet: linux.webp
         data: data.webp
         docker: docker.png
-        homeassistant: homeassistant.webp
+        homeassistant: home.webp
         homeserverpi: raspberrypi.webp
         linux: linux.webp
         music: vinyl.webp
