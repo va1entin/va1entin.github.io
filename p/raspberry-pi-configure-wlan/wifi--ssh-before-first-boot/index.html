@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.
+This post documents an interactive and a non-interactive approach.
+Interactively with Raspberry Pi Imager The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step."><meta name="author" content="Valentin Heidelberger">
+
+<link rel="canonical" href="https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/">
+
+
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+<title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
+
+
+<link rel="stylesheet" href="/css/styles.css" />
+
+
+<link rel="stylesheet" href="/css/syntax.css" />
+
+
+<link id="custom_css" href="/css/custom.css" rel="stylesheet">
+
+
+<link id="dark_css" href="/css/dark.css" rel="prefetch">
+
+
+
+
+<script src="/js/toggle_theme.js"></script>
+
+
+
+<script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="/index.html">Valentin Heidelberger</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" title="Blog" href="/index.html">
+            <span class="fa fa-book-open"></span>
+            <span> Blog</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a href="/search/" class="nav-link px-lg-3 py-3 py-lg-4" title="Search">
+            <span class="fa fa-search nav-search-icon"></span>
+            <span> Search</span>
+          </a>
+        </li>
+        
+        
+          <li class="nav-item" onclick="toggle()">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
+              <span class="fa fa-adjust"></span>
+              <span> Theme</span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+  
+
+<header class="masthead" style="background-image: url('/img/tags/raspberrypi.webp')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+          
+          
+          <div class="post-heading">
+            <h1>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</h1>
+            <h2 class="subheading"></h2>
+            <span class="meta">Posted by Valentin Heidelberger on May 15, 2022</span>
+            
+            <span class="meta"> Tags:
+              
+              <a href="/tags/technology">
+                    <i class="fa fa-tag"></i>
+                    technology
+                  </a>
+                  
+              <a href="/tags/linux">
+                    <i class="fa fa-tag"></i>
+                    linux
+                  </a>
+                  
+              <a href="/tags/raspberrypi">
+                    <i class="fa fa-tag"></i>
+                    raspberrypi
+                  </a>
+                  
+              <a href="/tags/homeserver">
+                    <i class="fa fa-tag"></i>
+                    homeserver
+                  </a>
+                  
+                </span>
+                
+              </div>
+              
+        </div>
+      </div>
+    </div>
+</header>
+  
+
+<article class="mb4">
+  
+<aside id="custom_toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#interactively-with-raspberry-pi-imager">Interactively with Raspberry Pi Imager</a></li>
+    <li><a href="#non-interactively-with-config-files">Non-interactively with config files</a>
+      <ul>
+        <li><a href="#initial-user-mandatory">Initial user (mandatory)</a></li>
+        <li><a href="#wlan">WLAN</a>
+          <ul>
+            <li><a href="#wpa3--wpa2-mixed-network">WPA3 / WPA2 mixed network</a></li>
+            <li><a href="#wpa2-only-network">WPA2-only network</a></li>
+          </ul>
+        </li>
+        <li><a href="#ssh">SSH</a></li>
+        <li><a href="#first-boot">First boot</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.</p>
+<p>This post documents an interactive and a non-interactive approach.</p>
+<h1 id="interactively-with-raspberry-pi-imager">Interactively with Raspberry Pi Imager</h1>
+<p>The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step.</p>
+<p>You can find it <a href="https://www.raspberrypi.com/software/">here</a>.</p>
+<p>The tool is quite self-explanatory, so I won&rsquo;t go into much detail here.</p>
+<p>Select the source image and destination in the tool, click the “settings” button – the picture of a cogwheel – before clicking “Write”, and use the Advanced options menu to enter a username and password, along with any other preconfiguration you want.</p>
+<p>Put the flashed micro SD card into your Pi, boot it up and enjoy!</p>
+<h1 id="non-interactively-with-config-files">Non-interactively with config files</h1>
+<p>If you don&rsquo;t want to use the official imaging tool or you want to keep a set of config files to use often, here is another non-interactive approach.</p>
+<p>To flash the image, you can use the official Imager, another interactive tool like <a href="https://www.balena.io/etcher/">Etcher</a> or a <a href="https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-images-on-linux">CLI tool like <code>dd</code></a>.</p>
+<p><strong>Having flashed the Raspberry Pi OS image onto your Pi</strong>, use your file explorer or terminal to move to a newly created partition called <code>boot</code> on the micro SD card.</p>
+<h2 id="initial-user-mandatory">Initial user (mandatory)</h2>
+<p>Since 2022, Raspberry Pi OS doesn&rsquo;t come with the well-known default user <code>pi</code> anymore. Instead, it asks you to create a user yourself on first boot interactively.</p>
+<p>To create a user automatically on first boot, you have to provide a file <code>userconf</code> containing your desired user and password in the <code>boot</code> partition.</p>
+<p>The file must contain your username and encrypted password like so:</p>
+<pre tabindex="0"><code>username:encrypted-password
+</code></pre><p>Make sure you are in the boot partition and use the following command, replacing <code>myuser</code> and <code>mypassword</code>, to create the file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> <span class="s2">&#34;myuser:</span><span class="k">$(</span><span class="nb">echo</span> <span class="s1">&#39;mypassword&#39;</span> <span class="p">|</span> openssl passwd -6 -stdin<span class="k">)</span><span class="s2">&#34;</span> &gt; userconf
+</span></span></code></pre></div><p>For example, the combination <code>myuser</code> and <code>mypassword</code> should look like this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ cat userconf
+</span></span><span class="line"><span class="cl">myuser:<span class="nv">$6$e1HRSQqoAr3UL0M8$nvsMz1SHlraA1R</span>.2FZwbAq3CnM743E9.DZqBOYtnS317TaNbMoPM3OPskUmiTWUFwT.2y5k2FM7HrufRGi2Nr/
+</span></span></code></pre></div><p>If you&rsquo;re on Windows, make sure that <code>userconf</code> doesn&rsquo;t have any other extension such as <em>.txt</em>.</p>
+<h2 id="wlan">WLAN</h2>
+<p>Create a file called <code>wpa_supplicant.conf</code> in the root of the <code>boot</code> partition and paste the contents corresponding to the WPA version you&rsquo;re using.</p>
+<p>If you&rsquo;re on Windows, make sure that <code>wpa_supplicant.conf</code> doesn&rsquo;t have any other extension such as <em>.txt</em>.</p>
+<p>Change the <em>country</em> parameter as well as the <em>ssid</em> and <em>psk</em> accordingly and save the file:</p>
+<h3 id="wpa3--wpa2-mixed-network">WPA3 / WPA2 mixed network</h3>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+     ssid=&#34;Your network name/SSID&#34;
+     psk=&#34;Your WPA security key&#34;
+     key_mgmt=WPA-PSK-SHA256
+     ieee80211w=2
+}
+</code></pre><h3 id="wpa2-only-network">WPA2-only network</h3>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+     ssid=&#34;Your network name/SSID&#34;
+     psk=&#34;Your WPA security key&#34;
+     key_mgmt=WPA-PSK
+}
+</code></pre><h2 id="ssh">SSH</h2>
+<p>Create an empty file simply called <code>ssh</code> in the <code>boot</code> partition. If you&rsquo;re on Windows, make sure that <code>ssh</code> doesn&rsquo;t have any other extension such as <em>.txt</em>.</p>
+<h2 id="first-boot">First boot</h2>
+<p>Once all the files are saved, eject the SD card safely, put it in your Pi and boot it up. You should be able to connect via SSH using the user and password you&rsquo;ve set before shortly after.</p>
+
+        <br>
+      </div>
+    </div>
+  </div>
+</article>
+
+  
+<footer class="border-top">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="/index.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                    <i class="far fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-rss fa-stack-1x"></i>
+                </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/va1entin" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+        <li class="list-inline-item">
+          <a href="https://gitlab.com/va1entin" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-gitlab fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-linkedin fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-xing fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        <div class="small text-center text-muted fst-italic">
+        
+            <br>
+            <br>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2022
+            <br>
+            This applies to the contents of my blog and other texts on this site only.
+            <br>
+            <a href="/terms-of-use">Terms of use</a>
+            <br>
+            Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+        
+        </div>
+        </ul>
+        <br>
+        <br>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="/js/scripts.js"></script>
+</body>
+</html>

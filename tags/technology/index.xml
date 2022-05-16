@@ -6,7 +6,18 @@
     <description>Recent content in technology on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 May 2022 14:43:17 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 May 2022 14:03:59 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
+      <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
+      <pubDate>Sun, 15 May 2022 14:03:59 +0000</pubDate>
+      
+      <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
+      <description>Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.
+This post documents an interactive and a non-interactive approach.
+Interactively with Raspberry Pi Imager The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step.</description>
+    </item>
+    
     <item>
       <title>Windows Auto Dark Mode - Change multi-screen wallpaper</title>
       <link>https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/</link>

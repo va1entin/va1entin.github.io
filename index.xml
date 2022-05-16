@@ -6,7 +6,68 @@
         <description>Recent content on Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 06 May 2022 14:43:17 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 15 May 2022 14:03:59 +0000</lastBuildDate><atom:link href="https://valh.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
+        <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
+        <pubDate>Sun, 15 May 2022 14:03:59 +0000</pubDate>
+        
+        <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
+        <description>
+ &lt;p&gt;Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.&lt;/p&gt;
+&lt;p&gt;This post documents an interactive and a non-interactive approach.&lt;/p&gt;
+&lt;h1 id=&#34;interactively-with-raspberry-pi-imager&#34;&gt;Interactively with Raspberry Pi Imager&lt;/h1&gt;
+&lt;p&gt;The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step.&lt;/p&gt;
+&lt;p&gt;You can find it &lt;a href=&#34;https://www.raspberrypi.com/software/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The tool is quite self-explanatory, so I won&amp;rsquo;t go into much detail here.&lt;/p&gt;
+&lt;p&gt;Select the source image and destination in the tool, click the “settings” button – the picture of a cogwheel – before clicking “Write”, and use the Advanced options menu to enter a username and password, along with any other preconfiguration you want.&lt;/p&gt;
+&lt;p&gt;Put the flashed micro SD card into your Pi, boot it up and enjoy!&lt;/p&gt;
+&lt;h1 id=&#34;non-interactively-with-config-files&#34;&gt;Non-interactively with config files&lt;/h1&gt;
+&lt;p&gt;If you don&amp;rsquo;t want to use the official imaging tool or you want to keep a set of config files to use often, here is another non-interactive approach.&lt;/p&gt;
+&lt;p&gt;To flash the image, you can use the official Imager, another interactive tool like &lt;a href=&#34;https://www.balena.io/etcher/&#34;&gt;Etcher&lt;/a&gt; or a &lt;a href=&#34;https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-images-on-linux&#34;&gt;CLI tool like &lt;code&gt;dd&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Having flashed the Raspberry Pi OS image onto your Pi&lt;/strong&gt;, use your file explorer or terminal to move to a newly created partition called &lt;code&gt;boot&lt;/code&gt; on the micro SD card.&lt;/p&gt;
+&lt;h2 id=&#34;initial-user-mandatory&#34;&gt;Initial user (mandatory)&lt;/h2&gt;
+&lt;p&gt;Since 2022, Raspberry Pi OS doesn&amp;rsquo;t come with the well-known default user &lt;code&gt;pi&lt;/code&gt; anymore. Instead, it asks you to create a user yourself on first boot interactively.&lt;/p&gt;
+&lt;p&gt;To create a user automatically on first boot, you have to provide a file &lt;code&gt;userconf&lt;/code&gt; containing your desired user and password in the &lt;code&gt;boot&lt;/code&gt; partition.&lt;/p&gt;
+&lt;p&gt;The file must contain your username and encrypted password like so:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;username:encrypted-password
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Make sure you are in the boot partition and use the following command, replacing &lt;code&gt;myuser&lt;/code&gt; and &lt;code&gt;mypassword&lt;/code&gt;, to create the file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;myuser:&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;mypassword&amp;#39;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; openssl passwd -6 -stdin&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt; &amp;gt; userconf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For example, the combination &lt;code&gt;myuser&lt;/code&gt; and &lt;code&gt;mypassword&lt;/code&gt; should look like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;$ cat userconf
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;myuser:&lt;span class=&#34;nv&#34;&gt;$6$e1HRSQqoAr3UL0M8$nvsMz1SHlraA1R&lt;/span&gt;.2FZwbAq3CnM743E9.DZqBOYtnS317TaNbMoPM3OPskUmiTWUFwT.2y5k2FM7HrufRGi2Nr/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If you&amp;rsquo;re on Windows, make sure that &lt;code&gt;userconf&lt;/code&gt; doesn&amp;rsquo;t have any other extension such as &lt;em&gt;.txt&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;wlan&#34;&gt;WLAN&lt;/h2&gt;
+&lt;p&gt;Create a file called &lt;code&gt;wpa_supplicant.conf&lt;/code&gt; in the root of the &lt;code&gt;boot&lt;/code&gt; partition and paste the contents corresponding to the WPA version you&amp;rsquo;re using.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;re on Windows, make sure that &lt;code&gt;wpa_supplicant.conf&lt;/code&gt; doesn&amp;rsquo;t have any other extension such as &lt;em&gt;.txt&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Change the &lt;em&gt;country&lt;/em&gt; parameter as well as the &lt;em&gt;ssid&lt;/em&gt; and &lt;em&gt;psk&lt;/em&gt; accordingly and save the file:&lt;/p&gt;
+&lt;h3 id=&#34;wpa3--wpa2-mixed-network&#34;&gt;WPA3 / WPA2 mixed network&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+     ssid=&amp;#34;Your network name/SSID&amp;#34;
+     psk=&amp;#34;Your WPA security key&amp;#34;
+     key_mgmt=WPA-PSK-SHA256
+     ieee80211w=2
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;wpa2-only-network&#34;&gt;WPA2-only network&lt;/h3&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+     ssid=&amp;#34;Your network name/SSID&amp;#34;
+     psk=&amp;#34;Your WPA security key&amp;#34;
+     key_mgmt=WPA-PSK
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;ssh&#34;&gt;SSH&lt;/h2&gt;
+&lt;p&gt;Create an empty file simply called &lt;code&gt;ssh&lt;/code&gt; in the &lt;code&gt;boot&lt;/code&gt; partition. If you&amp;rsquo;re on Windows, make sure that &lt;code&gt;ssh&lt;/code&gt; doesn&amp;rsquo;t have any other extension such as &lt;em&gt;.txt&lt;/em&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;first-boot&#34;&gt;First boot&lt;/h2&gt;
+&lt;p&gt;Once all the files are saved, eject the SD card safely, put it in your Pi and boot it up. You should be able to connect via SSH using the user and password you&amp;rsquo;ve set before shortly after.&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Windows Auto Dark Mode - Change multi-screen wallpaper</title>
         <link>https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/</link>
         <pubDate>Fri, 06 May 2022 14:43:17 +0000</pubDate>

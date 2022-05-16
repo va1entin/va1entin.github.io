@@ -3,25 +3,34 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://valh.io/</loc>
-    <lastmod>2022-05-06T14:43:17+00:00</lastmod>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/homeserver/</loc>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/linux/</loc>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/post/</loc>
-    <lastmod>2022-05-06T14:43:17+00:00</lastmod>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</loc>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
+  </url><url>
+    <loc>https://valh.io/tags/raspberrypi/</loc>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/</loc>
-    <lastmod>2022-05-06T14:43:17+00:00</lastmod>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/technology/</loc>
-    <lastmod>2022-05-06T14:43:17+00:00</lastmod>
+    <lastmod>2022-05-15T14:03:59+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/windows/</loc>
     <lastmod>2022-05-06T14:43:17+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/p/windows-auto-dark-mode-change-multi-screen-wallpaper/</loc>
     <lastmod>2022-05-06T14:43:17+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/tags/linux/</loc>
-    <lastmod>2022-04-29T12:34:45+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/p/workaround-for-broken-dns-in-wsl2/</loc>
     <lastmod>2022-04-29T12:34:45+00:00</lastmod>
@@ -57,9 +66,6 @@
     <lastmod>2021-02-16T17:50:56+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</loc>
-    <lastmod>2021-02-06T15:53:11+00:00</lastmod>
-  </url><url>
-    <loc>https://valh.io/tags/raspberrypi/</loc>
     <lastmod>2021-02-06T15:53:11+00:00</lastmod>
   </url><url>
     <loc>https://valh.io/tags/music/</loc>
