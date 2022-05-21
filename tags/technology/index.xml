@@ -6,7 +6,17 @@
     <description>Recent content in technology on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 May 2022 14:03:59 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 May 2022 18:24:29 +0000</lastBuildDate><atom:link href="https://valh.io/tags/technology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android TV Cheat Sheet</title>
+      <link>https://valh.io/p/android-tv-cheat-sheet/</link>
+      <pubDate>Fri, 20 May 2022 18:24:29 +0000</pubDate>
+      
+      <guid>https://valh.io/p/android-tv-cheat-sheet/</guid>
+      <description>Recently, I ventured further into the world of Android TV using Android 11 on a Xiaomi TV Stick 4K. In this post I&amp;rsquo;ll share some insights to get the most out of your Android TV.
+Keep in mind that not all of these might work the same way or at all on any Android TV device! Most of them should, though. When in doubt, try and search for your device&amp;rsquo;s name and what you&amp;rsquo;re trying to do.</description>
+    </item>
+    
     <item>
       <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
       <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>

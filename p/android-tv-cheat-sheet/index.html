@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="description" content="Recently, I ventured further into the world of Android TV using Android 11 on a Xiaomi TV Stick 4K. In this post I&amp;rsquo;ll share some insights to get the most out of your Android TV.
+Keep in mind that not all of these might work the same way or at all on any Android TV device! Most of them should, though. When in doubt, try and search for your device&amp;rsquo;s name and what you&amp;rsquo;re trying to do."><meta name="author" content="Valentin Heidelberger">
+
+<link rel="canonical" href="https://valh.io/p/android-tv-cheat-sheet/">
+
+
+<link rel="icon" type="image/x-icon" href="/img/favicon.ico" />
+<title>Android TV Cheat Sheet</title>
+
+
+<link rel="stylesheet" href="/css/styles.css" />
+
+
+<link rel="stylesheet" href="/css/syntax.css" />
+
+
+<link id="custom_css" href="/css/custom.css" rel="stylesheet">
+
+
+<link id="dark_css" href="/css/dark.css" rel="prefetch">
+
+
+
+
+<script src="/js/toggle_theme.js"></script>
+
+
+
+<script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href="/index.html">Valentin Heidelberger</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" title="Blog" href="/index.html">
+            <span class="fa fa-book-open"></span>
+            <span> Blog</span>
+          </a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a href="/search/" class="nav-link px-lg-3 py-3 py-lg-4" title="Search">
+            <span class="fa fa-search nav-search-icon"></span>
+            <span> Search</span>
+          </a>
+        </li>
+        
+        
+          <li class="nav-item" onclick="toggle()">
+            <a class="nav-link px-lg-3 py-3 py-lg-4" title="Toggle theme - this used to be persistent but due to the uncertainties of the EU cookie law I'm now refraining from using them to make the theme persistent">
+              <span class="fa fa-adjust"></span>
+              <span> Theme</span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+
+  
+
+<header class="masthead" style="background-image: url('/img/tags/home.webp')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+          
+          
+          <div class="post-heading">
+            <h1>Android TV Cheat Sheet</h1>
+            <h2 class="subheading">Removing ads, installing custom apps, fixing quirks ...</h2>
+            <span class="meta">Posted by Valentin Heidelberger on May 20, 2022</span>
+            
+            <span class="meta"> Tags:
+              
+              <a href="/tags/android">
+                    <i class="fa fa-tag"></i>
+                    android
+                  </a>
+                  
+              <a href="/tags/technology">
+                    <i class="fa fa-tag"></i>
+                    technology
+                  </a>
+                  
+                </span>
+                
+              </div>
+              
+        </div>
+      </div>
+    </div>
+</header>
+  
+
+<article class="mb4">
+  
+<aside id="custom_toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#managing-the-device-with-adb">Managing the device with adb</a>
+      <ul>
+        <li><a href="#getting-adb">Getting adb</a></li>
+        <li><a href="#activating-debug-access-on-android-tv">Activating debug access on Android TV</a></li>
+        <li><a href="#connecting-to-android-tv-with-adb">Connecting to Android TV with adb</a></li>
+      </ul>
+    </li>
+    <li><a href="#ad-free-youtube">Ad-free YouTube</a></li>
+    <li><a href="#ad-free-launcher">Ad-free launcher</a></li>
+    <li><a href="#upload-files-onto-android-tv">Upload files onto Android TV</a></li>
+    <li><a href="#custom-functions-for-physical-remote-buttons">Custom functions for physical remote buttons</a></li>
+    <li><a href="#volume-too-low-or-too-high--changing-volume-without-remote">Volume too low or too high / Changing volume without remote</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>Recently, I ventured further into the world of Android TV using Android 11 on a <a href="https://www.mi.com/global/product/xiaomi-tv-stick-4k/">Xiaomi TV Stick 4K</a>. In this post I&rsquo;ll share some insights to get the most out of your Android TV.</p>
+<p>Keep in mind that not all of these might work the same way or at all on any Android TV device! Most of them should, though. When in doubt, try and search for your device&rsquo;s name and what you&rsquo;re trying to do.</p>
+<p>My main focus is to enable a customized, ad-free experience as well as to document quirks that I&rsquo;ve encountered.</p>
+<p>Note that some of the following things can be achieved by various means. For example, installing custom apps is also possible through certain third-party downloader apps. I&rsquo;m focussing on achieving everything without third-party tools, notably the Android Debug Bridge (adb) which provides a command line interface for interacting with Android devices. It comes with an initial learning curve but enables many more possibilities in the long-run and is usable across devices without relying on third parties.</p>
+<h1 id="managing-the-device-with-adb">Managing the device with adb</h1>
+<h2 id="getting-adb">Getting adb</h2>
+<p>Download the Android platform tools for your OS <a href="https://developer.android.com/studio/releases/platform-tools">here</a>. The zip file contains an executable <code>adb</code> among other things.</p>
+<p>Having unzipped the archive, move into it&rsquo;s content using your CLI - in my case Bash on Linux.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> platform-tools
+</span></span><span class="line"><span class="cl">./adb version
+</span></span></code></pre></div><p>You should see output stating the adb version you have now.</p>
+<h2 id="activating-debug-access-on-android-tv">Activating debug access on Android TV</h2>
+<p>Now, you need to allow debug access on your Android TV. To access the corresponding setting, you need to enable <code>Developer options</code>, which are hidden behind a little trick in Android.</p>
+<p>Open <code>Settings</code> -&gt; <code>Device preferences</code> and move to a section called <code>About [device]</code> or similar. In here you&rsquo;ll find various information like Android version, device model and also <strong>Android TV OS build</strong>. Tap/click on this a few times until a message appears on the bottom of the screen. It should tell you to press a few more times to activate <code>Developer options</code>.</p>
+<p>Once <code>Developer options</code> are activated you should see them as a category when opening <code>Settings</code> -&gt; <code>Device preferences</code>. Move into <code>Developer options</code>, scroll down to <code>USB debugging</code> and activate it.</p>
+<p>You can connect with adb through USB but I recommend using the wireless network, because it&rsquo;s much easier once you&rsquo;ve gotten the hang of it. Some devices (especially devices in &ldquo;Stick&rdquo; format) don&rsquo;t even have USB ports anymore or you need a special cable.</p>
+<h2 id="connecting-to-android-tv-with-adb">Connecting to Android TV with adb</h2>
+<p>Next, you need to find out the IP address of your Android TV device.</p>
+<p>In Android TV the IP address can be found in <code>Settings</code> -&gt; <code>Device preferences</code> -&gt; <code>About</code> -&gt; <code>Status</code>. Your router&rsquo;s web interface should also have it somewhere.</p>
+<p>Once you have the IP address of your device (in my case 192.168.178.10), run the following command to connect with adb. Make sure to use your device&rsquo;s actual IP address when copy-pasting:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb connect 192.168.178.10
+</span></span></code></pre></div><p>adb might say something like <code>Failed to authenticate [...]</code>. If that happens, look at your TV screen. You should see a pop-up window, asking you to click <code>OK</code> to allow access. This is a security feature to make sure not anyone can access your Android TV through adb just because they&rsquo;re in your network.</p>
+<p>After having allowed access, run the following to check whether the connection was established:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb devices
+</span></span></code></pre></div><p>It should put out a <code>List of devices attached</code> with one element: Your device&rsquo;s IP address.</p>
+<p><strong>Note</strong>, that it is considered a <strong>security risk</strong> to leave ADB debugging activated on Android <em>permanently</em>. It&rsquo;s highly encouraged to deactivate it when you&rsquo;re done and only re-activate when needed.</p>
+<h1 id="ad-free-youtube">Ad-free YouTube</h1>
+<p><code>SmartTubeNext</code> is an amazing third-party YouTube client for TVs. It&rsquo;s ad-free and contains many more comfort features like SponsorBlock. It&rsquo;s also highly customizable - I thoroughly recommend it.</p>
+<p>You can find it&rsquo;s code and get the APK file needed for installation <a href="https://github.com/yuliskov/SmartTubeNext">on GitHub</a>.</p>
+<p>Scroll down to <code>latest stable download</code> and download the linked file.</p>
+<p><a href="#managing-the-device-with-adb">Having connected to your device using adb</a>, you can install the APK file as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb install smarttube_stable.apk
+</span></span></code></pre></div><p>Make sure that the filename is correct and execute it.</p>
+<h1 id="ad-free-launcher">Ad-free launcher</h1>
+<p>(Most) Android TV devices come with the standard Google Launcher as default. It&rsquo;s looking slick but is unfortunately full of ads - not exactly what you might expect from <strong>your device</strong>, that you bought with <strong>your money</strong>.</p>
+<p>Luckily there are many ad-free launchers out there that you can just install instead. A big name mentioned in many places would be &ldquo;ATV Launcher&rdquo;, which is well established and has many features.</p>
+<p>ATV launcher&rsquo;s design was a bit too crowded for my taste, some features require the paid version and it&rsquo;s proprietary afaik.</p>
+<p>If you don&rsquo;t care about lots of widgets and are simply looking for a free, slick and <strong>open source</strong> launcher, I highly recommend <code>FLauncher</code>. It&rsquo;s source code can be found <a href="https://gitlab.com/etienn01/flauncher">on GitLab</a>.</p>
+<p>You can install it from the <a href="https://play.google.com/store/apps/details?id=me.efesser.flauncher&amp;hl=en&amp;gl=US">Play Store</a>.</p>
+<p>If you want to set a custom background image in FLauncher, check the chapter on <a href="#upload-files-onto-android-tv">uploading files onto Android TV</a>. Once your desired image is in the file system, you can easily set it as background image in FLauncher&rsquo;s settings.</p>
+<h1 id="upload-files-onto-android-tv">Upload files onto Android TV</h1>
+<p><a href="#managing-the-device-with-adb">Having connected to your device using adb</a>, you can push local files to Android TV as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb push my-local-image.png /sdcard/Pictures/my-remote-image.png
+</span></span></code></pre></div><p><strong>Note</strong>, that <code>/sdcard</code> represents the part of Android&rsquo;s file system sometimes referred to as &ldquo;internal SD card&rdquo;. It&rsquo;s basically the space where user data (Pictures, Music, Downloads, &hellip;) exists, which is why you usually want to put your files there.</p>
+<h1 id="custom-functions-for-physical-remote-buttons">Custom functions for physical remote buttons</h1>
+<p>Some Android TV devices come with physical remotes that exhibit buttons with weird functions - for instance my Xiaomi TV stick has a button that start&rsquo;s a non-removable pre-installed app that doesn&rsquo;t even work. With <code>Button Mapper</code> you can change what most of these buttons do (&ldquo;remap&rdquo; them).</p>
+<p>This is also very helpful when using a custom launcher (<a href="#ad-free-launcher">see above</a> to find out which one I recommend), because the home button (at least in my case) can be hard-wired to start the Google launcher and not another one which you might&rsquo;ve set as default. In Button Mapper, just choose your home button and modify it to start an app - your desired launcher.</p>
+<p>You can find Button Mapper <a href="https://play.google.com/store/apps/details?id=flar2.homebutton&amp;hl=en&amp;gl=US">in the Play Store</a> and install it directly on your Android TV device.</p>
+<p>Setting it up is self-explanatory so I won&rsquo;t go into much detail here. Note, that some buttons might not be changeable - the premium version promises to allow for more buttons to be modified but I didn&rsquo;t try it yet.</p>
+<h1 id="volume-too-low-or-too-high--changing-volume-without-remote">Volume too low or too high / Changing volume without remote</h1>
+<p>This was a funny one: Xiaomi&rsquo;s TV Stick comes with a remote which automatically configures itself to control your TV as well. That&rsquo;s very handy, because you only need one remote to turn your TV on/off, change the volume and navigate through Android TV at the same time.</p>
+<p>Unfortunately, I&rsquo;ve found the sound of any media playing through Android TV to be <strong>really</strong> quiet. I&rsquo;ve had to put my TV on 100% volume to hear anything. For any other device 20% was more than enough.</p>
+<p>The problem was that Android TV also has it&rsquo;s own volume level - like any other Android device. The remote wasn&rsquo;t changing that one though, because it was changing the TV&rsquo;s volume instead.</p>
+<p>So there are two volume levels to be adjusted but the remote can only change one. It is most likely possible to un-pair the Android TV remote and TV, turn Android&rsquo;s volume up and pair the remote again but I find the following way to be much quicker.</p>
+<p>With the following adb commands, we get a shell on Android TV and then simulate &ldquo;volume up&rdquo; button presses. I just did this a few times until the volume was on max and left it there. You should see a volume bar appear in Android TV, when you execute one of the <code>input</code> commands.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># Get a shell on your Android TV</span>
+</span></span><span class="line"><span class="cl">adb shell
+</span></span><span class="line"><span class="cl"><span class="c1"># Send a volume up key event</span>
+</span></span><span class="line"><span class="cl">input keyevent <span class="m">24</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Send a volume down key event</span>
+</span></span><span class="line"><span class="cl">input keyevent <span class="m">25</span>
+</span></span></code></pre></div><p>Thanks to ce4 on <a href="https://android.stackexchange.com/questions/25828/how-can-i-remotely-change-the-volume">Android StackExchange</a> for documenting this!</p>
+<p>There is another, arguably more elegant way to do this using the <code>media</code> command in the adb shell. It allows you to directly set the volume to your desired value. I couldn&rsquo;t find a <code>media</code> executable on my device though so I&rsquo;m just documenting it for the sake of completeness. You can find a good example on <a href="https://stackoverflow.com/questions/21055947/adb-command-to-set-volume">StackOverflow</a>.</p>
+
+        <br>
+      </div>
+    </div>
+  </div>
+</article>
+
+  
+<footer class="border-top">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <ul class="list-inline text-center">
+          
+          <li class="list-inline-item">
+            <a href="/index.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                    <i class="far fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-rss fa-stack-1x"></i>
+                </span>
+            </a>
+          </li>
+          
+          
+          <li class="list-inline-item">
+            <a href="https://github.com/va1entin" target="_blank">
+              <span class="fa-stack fa-lg">
+                <i class="far fa-circle fa-stack-2x"></i>
+                <i class="fab fa-github fa-stack-1x"></i>
+              </span>
+            </a>
+          </li>
+          
+          
+        <li class="list-inline-item">
+          <a href="https://gitlab.com/va1entin" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-gitlab fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.linkedin.com/in/valentin-heidelberger-251769102" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-linkedin fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        
+        <li class="list-inline-item">
+          <a href="https://www.xing.com/profile/Valentin_Heidelberger" target="_blank">
+            <span class="fa-stack fa-lg">
+              <i class="far fa-circle fa-stack-2x"></i>
+              <i class="fab fa-xing fa-stack-1x"></i>
+            </span>
+          </a>
+        </li>
+        
+        <div class="small text-center text-muted fst-italic">
+        
+            <br>
+            <br>
+            <a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY 4.0 International</a> Valentin Heidelberger 2017 - 2022
+            <br>
+            This applies to the contents of my blog and other texts on this site only.
+            <br>
+            <a href="/terms-of-use">Terms of use</a>
+            <br>
+            Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+        
+        </div>
+        </ul>
+        <br>
+        <br>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="/js/scripts.js"></script>
+</body>
+</html>
