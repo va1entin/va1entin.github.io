@@ -6,7 +6,17 @@
     <description>Recent content in cheatsheet on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Mar 2021 15:53:11 +0000</lastBuildDate><atom:link href="https://valh.io/tags/cheatsheet/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 May 2022 18:24:29 +0000</lastBuildDate><atom:link href="https://valh.io/tags/cheatsheet/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android TV Cheat Sheet</title>
+      <link>https://valh.io/p/android-tv-cheat-sheet/</link>
+      <pubDate>Fri, 20 May 2022 18:24:29 +0000</pubDate>
+      
+      <guid>https://valh.io/p/android-tv-cheat-sheet/</guid>
+      <description>Recently, I ventured further into the world of Android TV using Android 11 on a Xiaomi TV Stick 4K. In this post I&amp;rsquo;ll share some insights to get the most out of your Android TV.
+Keep in mind that not all of these might work the same way or at all on any Android TV device! Most of them should, though. When in doubt, try and search for your device&amp;rsquo;s name and what you&amp;rsquo;re trying to do.</description>
+    </item>
+    
     <item>
       <title>Python cheat sheet for InfluxDB2 (influxdb_client)</title>
       <link>https://valh.io/p/python-cheat-sheet-for-influxdb2-influxdb_client/</link>
