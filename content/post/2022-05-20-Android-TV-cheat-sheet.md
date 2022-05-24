@@ -7,6 +7,7 @@ title: Android TV Cheat Sheet
 subtitle: "Removing ads, installing custom apps, fixing quirks ..."
 tags:
 - android
+- cheatsheet
 - technology
 toc: true
 ---
