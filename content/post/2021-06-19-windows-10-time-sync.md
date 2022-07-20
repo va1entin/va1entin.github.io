@@ -11,11 +11,13 @@ title: Sync system time automatically at Windows startup
 toc: true
 ---
 
+**Update**: The Windows time sync service is not working reliably. It was working fine on my system for a few months but stopped syncing time properly eventually even though it is still being started automatically. Feel free to give it a try nonetheless but know that this seems to be another one of Windows' great unreliable mysteries...
+
 Unlike most other operating systems, Windows 10 doesn't sync the time with an internet service at startup by default. This can become an issue, if your mainboard's built-in clock provides a wrong time or uses a different time zone.
 
 If the mainboard's battery responsible for storing time dies, it can become an even more annoying problem, because Windows will always start with an ever-growing time skew, which can eventually result in web browsing become a problem due to Windows considering websites' SSL certificates *not yet valid* - effectively rendering browsing the majority of web pages impossible!
 
-Luckily, this can be easily worked around by starting Windows' time sync service automatically at startup. Below you'll find instructions on doing this with the graphical *Services* console and PowerShell.
+This can be worked around by starting Windows' time sync service automatically at startup. Below you'll find instructions on doing this with the graphical *Services* console and PowerShell.
 
 # Services console
 
