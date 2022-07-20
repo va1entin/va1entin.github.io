@@ -65,8 +65,8 @@ The cause seems to be some kind of privilege problem with the Docker service run
       <pubDate>Sat, 19 Jun 2021 17:22:45 +0000</pubDate>
       
       <guid>https://valh.io/p/sync-system-time-automatically-at-windows-startup/</guid>
-      <description>Unlike most other operating systems, Windows 10 doesn&amp;rsquo;t sync the time with an internet service at startup by default. This can become an issue, if your mainboard&amp;rsquo;s built-in clock provides a wrong time or uses a different time zone.
-If the mainboard&amp;rsquo;s battery responsible for storing time dies, it can become an even more annoying problem, because Windows will always start with an ever-growing time skew, which can eventually result in web browsing become a problem due to Windows considering websites&amp;rsquo; SSL certificates not yet valid - effectively rendering browsing the majority of web pages impossible!</description>
+      <description>Update: The Windows time sync service is not working reliably. It was working fine on my system for a few months but stopped syncing time properly eventually even though it is still being started automatically. Feel free to give it a try nonetheless but know that this seems to be another one of Windows&amp;rsquo; great unreliable mysteries&amp;hellip;
+Unlike most other operating systems, Windows 10 doesn&amp;rsquo;t sync the time with an internet service at startup by default.</description>
     </item>
     
     <item>
