@@ -44,6 +44,12 @@ wsl.exe --shutdown
 
 After the command has finished successfully, you can start WSL2 again.
 
+Back in WSL, remove the broken DNS configuration file that WSL leaves behind.
+
+```bash
+rm /etc/resolv.conf
+```
+
 Next, we'll set up DNS inside Linux. There are multiple ways of varying complexity depending on your use case.
 
 # One remote DNS server
@@ -102,9 +108,21 @@ server=1.1.1.1
 no-dhcp-interface=
 ```
 
+Finally, start dnsmasq...
+
+```bash
+sudo service dnsmasq start
+```
+
+...and check whether it started successfully.
+
+```bash
+sudo service dnsmasq status
+```
+
 ## Get dnsmasq ip address
 
-Now that we have installed and configured dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address dnsmasq is listening on first.
+Now that we have installed, configured and started dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address that dnsmasq is listening on first.
 
 This can be accomplished with `netstat`, which you can install with the package `net-tools`.
 
@@ -112,21 +130,25 @@ This can be accomplished with `netstat`, which you can install with the package 
 sudo apt install -y net-tools
 ```
 
-This command should give us just the IP we need:
+This command gives us the IPs that any running instances of dnsmasq are listening on:
 
 ```bash
-netstat -tulpen | grep dnsmasq | awk '{ print $3 }'
+sudo netstat -tulpen | grep dnsmasq
 ```
 
-If it doesn't, make sure dnsmasq is up and running. If it's not, check for errors in the config file.
+If there is not output, make sure dnsmasq is up and running. If its not running, check for errors in the config file.
 
 ## Set dnsmasq as DNS server to be used
 
-Open `/etc/resolv.conf` and add the IP you've just found. In my case it was `127.0.0.53`. Save the file to start using dnsmasq as DNS server.
+Open `/etc/resolv.conf` and add the IP you've just found. In my case it was `127.0.0.53` but it can also be `0.0.0.0`.
+
+If it is `0.0.0.0` just put `127.0.0.1` as IP here.
 
 ```bash
 nameserver  127.0.0.53
 ```
+
+Save the file to start using dnsmasq as DNS server.
 
 ## Start dnsmasq automatically at WSL start (hacky)
 
