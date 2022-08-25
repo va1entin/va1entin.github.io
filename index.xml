@@ -199,7 +199,9 @@ network={
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;wsl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;exe&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;-shutdown&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://github.com/microsoft/WSL/issues/5611#issuecomment-661272808&#34;&gt;See here&lt;/a&gt; for reference, if you want to know in detail why this is necessary.&lt;/p&gt;
 &lt;p&gt;After the command has finished successfully, you can start WSL2 again.&lt;/p&gt;
-&lt;p&gt;Next, we&amp;rsquo;ll set up DNS inside Linux. There are multiple ways of varying complexity depending on your use case.&lt;/p&gt;
+&lt;p&gt;Back in WSL, remove the broken DNS configuration file that WSL leaves behind.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;rm /etc/resolv.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, we&amp;rsquo;ll set up DNS inside Linux. There are multiple ways of varying complexity depending on your use case.&lt;/p&gt;
 &lt;h1 id=&#34;one-remote-dns-server&#34;&gt;One remote DNS server&lt;/h1&gt;
 &lt;p&gt;If you just need to use one DNS server like a public DNS or a server provided by your organization that can resolve everything you need, this is the most simple setup.&lt;/p&gt;
 &lt;p&gt;In WSL2, open the file &lt;code&gt;/etc/resolv.conf&lt;/code&gt;, paste the following content and save:&lt;/p&gt;
@@ -225,17 +227,23 @@ network={
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;/mycompany.internal/192.168.1.53
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1.1.1.1
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;no-dhcp-interface&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, start dnsmasq&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo service dnsmasq start
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;hellip;and check whether it started successfully.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo service dnsmasq status
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;get-dnsmasq-ip-address&#34;&gt;Get dnsmasq ip address&lt;/h2&gt;
-&lt;p&gt;Now that we have installed and configured dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address dnsmasq is listening on first.&lt;/p&gt;
+&lt;p&gt;Now that we have installed, configured and started dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address that dnsmasq is listening on first.&lt;/p&gt;
 &lt;p&gt;This can be accomplished with &lt;code&gt;netstat&lt;/code&gt;, which you can install with the package &lt;code&gt;net-tools&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo apt install -y net-tools
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command should give us just the IP we need:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;netstat -tulpen &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep dnsmasq &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{ print $3 }&amp;#39;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If it doesn&amp;rsquo;t, make sure dnsmasq is up and running. If it&amp;rsquo;s not, check for errors in the config file.&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command gives us the IPs that any running instances of dnsmasq are listening on:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sudo netstat -tulpen &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep dnsmasq
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If there is not output, make sure dnsmasq is up and running. If its not running, check for errors in the config file.&lt;/p&gt;
 &lt;h2 id=&#34;set-dnsmasq-as-dns-server-to-be-used&#34;&gt;Set dnsmasq as DNS server to be used&lt;/h2&gt;
-&lt;p&gt;Open &lt;code&gt;/etc/resolv.conf&lt;/code&gt; and add the IP you&amp;rsquo;ve just found. In my case it was &lt;code&gt;127.0.0.53&lt;/code&gt;. Save the file to start using dnsmasq as DNS server.&lt;/p&gt;
+&lt;p&gt;Open &lt;code&gt;/etc/resolv.conf&lt;/code&gt; and add the IP you&amp;rsquo;ve just found. In my case it was &lt;code&gt;127.0.0.53&lt;/code&gt; but it can also be &lt;code&gt;0.0.0.0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If it is &lt;code&gt;0.0.0.0&lt;/code&gt; just put &lt;code&gt;127.0.0.1&lt;/code&gt; as IP here.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nameserver  127.0.0.53
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;start-dnsmasq-automatically-at-wsl-start-hacky&#34;&gt;Start dnsmasq automatically at WSL start (hacky)&lt;/h2&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Save the file to start using dnsmasq as DNS server.&lt;/p&gt;
+&lt;h2 id=&#34;start-dnsmasq-automatically-at-wsl-start-hacky&#34;&gt;Start dnsmasq automatically at WSL start (hacky)&lt;/h2&gt;
 &lt;p&gt;Since WSL2 is not a real Linux, we can&amp;rsquo;t use systemd or similar &lt;em&gt;good ways&lt;/em&gt; to automatically start our newly configured DNS server &lt;em&gt;for now&lt;/em&gt; (systemd is supposed to be added to Ubuntu WSL in the future).&lt;/p&gt;
 &lt;p&gt;I didn&amp;rsquo;t dig for a perfect solution here tbh, because I&amp;rsquo;m using Windows and WSL2 involuntarily.&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s why I just wrote a tiny Shell script which checks whether dnsmasq is running and, if it doesn&amp;rsquo;t, starts it. This runs every time I open a shell in WSL2.&lt;/p&gt;

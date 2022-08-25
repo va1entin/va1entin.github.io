@@ -159,7 +159,9 @@ Luckily there are plenty of ways to work around this, because we can just do DNS
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="n">wsl</span><span class="p">.</span><span class="n">exe</span> <span class="p">-</span><span class="n">-shutdown</span>
 </span></span></code></pre></div><p><a href="https://github.com/microsoft/WSL/issues/5611#issuecomment-661272808">See here</a> for reference, if you want to know in detail why this is necessary.</p>
 <p>After the command has finished successfully, you can start WSL2 again.</p>
-<p>Next, we&rsquo;ll set up DNS inside Linux. There are multiple ways of varying complexity depending on your use case.</p>
+<p>Back in WSL, remove the broken DNS configuration file that WSL leaves behind.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">rm /etc/resolv.conf
+</span></span></code></pre></div><p>Next, we&rsquo;ll set up DNS inside Linux. There are multiple ways of varying complexity depending on your use case.</p>
 <h1 id="one-remote-dns-server">One remote DNS server</h1>
 <p>If you just need to use one DNS server like a public DNS or a server provided by your organization that can resolve everything you need, this is the most simple setup.</p>
 <p>In WSL2, open the file <code>/etc/resolv.conf</code>, paste the following content and save:</p>
@@ -185,17 +187,23 @@ Luckily there are plenty of ways to work around this, because we can just do DNS
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">server</span><span class="o">=</span>/mycompany.internal/192.168.1.53
 </span></span><span class="line"><span class="cl"><span class="nv">server</span><span class="o">=</span>1.1.1.1
 </span></span><span class="line"><span class="cl">no-dhcp-interface<span class="o">=</span>
+</span></span></code></pre></div><p>Finally, start dnsmasq&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo service dnsmasq start
+</span></span></code></pre></div><p>&hellip;and check whether it started successfully.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo service dnsmasq status
 </span></span></code></pre></div><h2 id="get-dnsmasq-ip-address">Get dnsmasq ip address</h2>
-<p>Now that we have installed and configured dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address dnsmasq is listening on first.</p>
+<p>Now that we have installed, configured and started dnsmasq, we need to configure our Linux to use it as for DNS. We need to find the IP address that dnsmasq is listening on first.</p>
 <p>This can be accomplished with <code>netstat</code>, which you can install with the package <code>net-tools</code>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt install -y net-tools
-</span></span></code></pre></div><p>This command should give us just the IP we need:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">netstat -tulpen <span class="p">|</span> grep dnsmasq <span class="p">|</span> awk <span class="s1">&#39;{ print $3 }&#39;</span>
-</span></span></code></pre></div><p>If it doesn&rsquo;t, make sure dnsmasq is up and running. If it&rsquo;s not, check for errors in the config file.</p>
+</span></span></code></pre></div><p>This command gives us the IPs that any running instances of dnsmasq are listening on:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo netstat -tulpen <span class="p">|</span> grep dnsmasq
+</span></span></code></pre></div><p>If there is not output, make sure dnsmasq is up and running. If its not running, check for errors in the config file.</p>
 <h2 id="set-dnsmasq-as-dns-server-to-be-used">Set dnsmasq as DNS server to be used</h2>
-<p>Open <code>/etc/resolv.conf</code> and add the IP you&rsquo;ve just found. In my case it was <code>127.0.0.53</code>. Save the file to start using dnsmasq as DNS server.</p>
+<p>Open <code>/etc/resolv.conf</code> and add the IP you&rsquo;ve just found. In my case it was <code>127.0.0.53</code> but it can also be <code>0.0.0.0</code>.</p>
+<p>If it is <code>0.0.0.0</code> just put <code>127.0.0.1</code> as IP here.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nameserver  127.0.0.53
-</span></span></code></pre></div><h2 id="start-dnsmasq-automatically-at-wsl-start-hacky">Start dnsmasq automatically at WSL start (hacky)</h2>
+</span></span></code></pre></div><p>Save the file to start using dnsmasq as DNS server.</p>
+<h2 id="start-dnsmasq-automatically-at-wsl-start-hacky">Start dnsmasq automatically at WSL start (hacky)</h2>
 <p>Since WSL2 is not a real Linux, we can&rsquo;t use systemd or similar <em>good ways</em> to automatically start our newly configured DNS server <em>for now</em> (systemd is supposed to be added to Ubuntu WSL in the future).</p>
 <p>I didn&rsquo;t dig for a perfect solution here tbh, because I&rsquo;m using Windows and WSL2 involuntarily.</p>
 <p>That&rsquo;s why I just wrote a tiny Shell script which checks whether dnsmasq is running and, if it doesn&rsquo;t, starts it. This runs every time I open a shell in WSL2.</p>
