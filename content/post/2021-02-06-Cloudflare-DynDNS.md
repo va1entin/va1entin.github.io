@@ -86,6 +86,15 @@ zone_name: "example.com"
 record_name: "hello"
 ```
 
+To change the root record of your domain - *example.com* itself - use @ as record_name, just like in the Cloudflare dashboard:
+
+```yaml
+read_token: "foo"
+edit_token: "bar"
+zone_name: "example.com"
+record_name: "@"
+```
+
 ## Run script
 Lastly run the script with your desired parameters. I recommend reading the brief usage info at least once:
 
