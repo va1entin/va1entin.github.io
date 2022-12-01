@@ -8,10 +8,6 @@
     color: #e2e2e2;
   }
 
-  .form-control {
-    color: #e2e2e2;
-  }
-
   hr {
     border-top: 1px solid #444040;
   }
@@ -92,12 +88,12 @@
   .form-control {
     background-color: #181a1b;
     border: 1px solid #586268;
+    color: #e2e2e2;
   }
 
   .form-control:focus {
     background-color: #181a1b;
-    border: 1px solid #00657b;
+    border: 1px solid #088caa;
     box-shadow: 0 0 0 0.2rem #00657b;
-    color: #495057
   }
 }
