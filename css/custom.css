@@ -50,3 +50,8 @@
   text-align: center;
   padding-left: 0%;
 }
+
+header.masthead {
+  padding-top: calc(5rem + 30px);
+  padding-bottom: 5rem;
+}
