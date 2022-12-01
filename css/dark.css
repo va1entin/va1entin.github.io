@@ -97,4 +97,8 @@
     box-shadow: 0 0 0 0.2rem #00657b;
     color: #e2e2e2;
   }
+
+  ::placeholder {
+    color: #afabab;
+  }
 }
