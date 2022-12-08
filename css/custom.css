@@ -53,8 +53,12 @@
 
 header.masthead {
   padding-top: calc(5rem + 30px);
-  padding-bottom: 5rem;
+  padding-bottom: 2rem;
   margin-bottom: 0rem;
+}
+
+header.masthead .post-heading .subheading {
+  margin: 0 0 0.5rem;
 }
 
 .post-preview > a > .post-title {
@@ -78,4 +82,31 @@ h3, .h3 {
 
 .post-preview > .post-meta {
   font-size: 0.9rem;
+}
+
+@media (max-width: 992px) {
+  body {
+    font-size: 0.7rem;
+  }
+  .navbar-brand {
+    font-size: 1.0rem;
+  }
+  header.masthead .post-heading h1, header.masthead .post-heading .h1 {
+    font-size: 1.5rem;
+  }
+  header.masthead .post-heading .subheading {
+    font-size: 1.0rem;
+  }
+  header.masthead .post-heading .meta {
+    font-size: 0.7rem;
+  }
+  p {
+    margin: 0.5rem 0;
+  }
+  h1, .h1 {
+    font-size: 1.1rem;
+  }
+  h2, .h2 {
+    font-size: 0.95rem;
+  }
 }
