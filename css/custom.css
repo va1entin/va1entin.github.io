@@ -56,3 +56,26 @@ header.masthead {
   padding-bottom: 5rem;
   margin-bottom: 0rem;
 }
+
+.post-preview > a > .post-title {
+  font-size: 1.3rem;
+}
+
+@media (min-width: 992px) {
+  .post-preview > a > .post-title {
+    font-size: 2.25rem;
+  }
+}
+
+h3, .h3 {
+  font-size: 1.1rem;
+}
+@media (min-width: 1200px) {
+  h3, .h3 {
+    font-size: 1.75rem;
+  }
+}
+
+.post-preview > .post-meta {
+  font-size: 0.9rem;
+}
