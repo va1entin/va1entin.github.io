@@ -57,6 +57,10 @@ header.masthead {
   margin-bottom: 0rem;
 }
 
+.mb4 {
+  margin-top: 1rem;
+}
+
 header.masthead .post-heading .subheading {
   margin: 0 0 0.5rem;
 }
@@ -112,6 +116,10 @@ h3, .h3 {
   h2, .h2 {
     font-size: 0.95rem;
   }
+  ol,
+  ul {
+    padding-left: 0rem;
+  }
 }
 
 #mainNav .navbar-brand {
@@ -136,4 +144,22 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
 header.masthead .page-heading .subheading,
 header.masthead .site-heading .subheading {
   font-size: 1rem;
+}
+
+/* Upper navbar area is not affected! */
+.navbar-collapse {
+  backdrop-filter: blur(3px);
+}
+
+/*
+Blurry background for Navbar while scrolling up
+Does not yet work in Firefox
+Font color is not readable in bright theme over header image
+*/
+@media (min-width:992px) {
+  #mainNav.is-fixed {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(5px);
+    border-bottom: rgba(0, 0, 0, 0);
+  }
 }
