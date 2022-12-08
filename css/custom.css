@@ -91,6 +91,9 @@ h3, .h3 {
   .navbar-brand {
     font-size: 1.0rem;
   }
+  header.masthead {
+    padding-top: calc(3rem + 30px);
+  }
   header.masthead .post-heading h1, header.masthead .post-heading .h1 {
     font-size: 1.5rem;
   }
@@ -109,4 +112,28 @@ h3, .h3 {
   h2, .h2 {
     font-size: 0.95rem;
   }
+}
+
+#mainNav .navbar-brand {
+  font-weight: 700;
+}
+
+header.masthead .post-heading .subheading {
+  font-weight: 500;
+}
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  font-weight: 600;
+}
+#mainNav .navbar-nav > li.nav-item > a.nav-link {
+  font-weight: 700;
+}
+
+.px-4 {
+  padding-right: 0.1rem !important;
+  padding-left: 0.1rem !important;
+}
+
+header.masthead .page-heading .subheading,
+header.masthead .site-heading .subheading {
+  font-size: 1rem;
 }
