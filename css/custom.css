@@ -54,4 +54,5 @@
 header.masthead {
   padding-top: calc(5rem + 30px);
   padding-bottom: 5rem;
+  margin-bottom: 0rem;
 }
