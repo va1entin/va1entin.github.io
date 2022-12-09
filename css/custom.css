@@ -188,7 +188,7 @@ Font color is not readable in bright theme over header image
 }
 
 a:hover {
-  color: red;
+  color: #b6b6b6;
 }
 
 .post-preview > a:focus, .post-preview > a:hover {
