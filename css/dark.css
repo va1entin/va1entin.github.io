@@ -24,6 +24,11 @@
     color: #cbcbcb;
   }
 
+  a:hover {
+    color: #696969;
+  }
+
+
   #mainNav {
     background-color: rgba(22, 22, 22, 0.9);
   }
@@ -67,17 +72,12 @@
     color: #cbcbcb;
   }
 
-  .btn-primary {
-    background-color: #383838;
-    border-color: #383838;
-  }
-
-  .post-title {
+  .post-preview > a {
     color: #e2e2e2;
   }
 
-  .post-subtitle {
-    color: #e2e2e2;
+  .post-preview > a:focus, .post-preview > a:hover {
+    color: #696969;
   }
 
   .table {
@@ -101,4 +101,14 @@
   ::placeholder {
     color: #afabab;
   }
+
+  .btn {
+    color: #e2e2e2;
+  }
+
+  .btn:hover {
+    color: #e2e2e2;
+    border-color: #e2e2e2;
+  }
+
 }
