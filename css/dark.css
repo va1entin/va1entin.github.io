@@ -33,22 +33,22 @@
     background-color: rgba(22, 22, 22, 0.9);
   }
 
+  #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+    color: #696969;
+  }
+
   @media only screen and (min-width:992px) {
     #mainNav {
       background:0 0;
     }
   }
 
-  .navbar-brand {
-    color: #e2e2e2 !important;
+  .navbar-light .navbar-brand {
+    color: #e2e2e2;
   }
 
-  .navbar-toggler {
-    color: #e2e2e2 !important;
-  }
-
-  .nav-link {
-    color: #e2e2e2 !important;
+  .navbar-light .navbar-toggler {
+    color: #e2e2e2;
   }
 
   #mainNav.is-fixed {
