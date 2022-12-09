@@ -1,32 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>raspberrypi on Blog</title>
-    <link>https://valh.io/tags/raspberrypi/</link>
-    <description>Recent content in raspberrypi on Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sun, 15 May 2022 14:03:59 +0000</lastBuildDate><atom:link href="https://valh.io/tags/raspberrypi/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Raspberry Pi: Configure WLAN/WiFi &#43; SSH before first boot</title>
-      <link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link>
-      <pubDate>Sun, 15 May 2022 14:03:59 +0000</pubDate>
-      
-      <guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid>
-      <description>Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>raspberrypi on Blog</title><link>https://valh.io/tags/raspberrypi/</link><description>Recent content in raspberrypi on Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 15 May 2022 14:03:59 +0000</lastBuildDate><atom:link href="https://valh.io/tags/raspberrypi/index.xml" rel="self" type="application/rss+xml"/><item><title>Raspberry Pi: Configure WLAN/WiFi + SSH before first boot</title><link>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</link><pubDate>Sun, 15 May 2022 14:03:59 +0000</pubDate><guid>https://valh.io/p/raspberry-pi-configure-wlan/wifi--ssh-before-first-boot/</guid><description>Lots of Raspberry Pis are used for purposes that require a wireless network connection and remote access. To save time otherwise spent on connecting the Pi to a screen and keyboard or wired network to configure this, you can just configure network, SSH and an initial user before the first boot.
 This post documents an interactive and a non-interactive approach.
-Interactively with Raspberry Pi Imager The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step.</description>
-    </item>
-    
-    <item>
-      <title>Python script for Cloudflare DNS record updates (DynDNS)</title>
-      <link>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</link>
-      <pubDate>Sat, 06 Feb 2021 15:53:11 +0000</pubDate>
-      
-      <guid>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</guid>
-      <description>Note: This is an update to a post from 2019 and features a rewrite in Python with various new features including IPv6 support, logging, argument parser, &amp;hellip;
-Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain registrar. For a system with an external IPv4 address that changes daily I needed a way to dynamically update a DNS record at Cloudflare with the system&amp;rsquo;s current external IP address.</description>
-    </item>
-    
-  </channel>
-</rss>
+Interactively with Raspberry Pi Imager The Raspberry Pi Foundation provides an imaging tool, allowing you to not only flash the current Raspberry Pi OS to a given device but also to configure a few things in the same step.</description></item><item><title>Python script for Cloudflare DNS record updates (DynDNS)</title><link>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</link><pubDate>Sat, 06 Feb 2021 15:53:11 +0000</pubDate><guid>https://valh.io/p/python-script-for-cloudflare-dns-record-updates-dyndns/</guid><description>Note: This is an update to a post from 2019 and features a rewrite in Python with various new features including IPv6 support, logging, argument parser, &amp;hellip;
+Why I&amp;rsquo;m using Cloudflare as CDN and DNS provider as well as domain registrar. For a system with an external IPv4 address that changes daily I needed a way to dynamically update a DNS record at Cloudflare with the system&amp;rsquo;s current external IP address.</description></item></channel></rss>
