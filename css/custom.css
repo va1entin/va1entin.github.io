@@ -42,6 +42,14 @@ header.masthead .post-heading .meta {
 }
 
 @media (max-width: 992px) {
+  .row {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  .row > * {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
   #custom_toc {
     padding-right: 15px;
     padding-left: 15px;
