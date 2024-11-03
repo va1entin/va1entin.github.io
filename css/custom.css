@@ -33,12 +33,6 @@ header.masthead .post-heading .meta {
     top: 75px;
     position: sticky;
   }
-  #mainNav.is-fixed .navbar-brand:focus, #mainNav.is-fixed .navbar-brand:hover {
-    color: #696969;
-  }
-  #mainNav.is-fixed .navbar-nav > li.nav-item > a:focus, #mainNav.is-fixed .navbar-nav > li.nav-item > a:hover {
-    color: #696969;
-  }
 }
 
 @media (max-width: 992px) {
@@ -177,19 +171,6 @@ header.masthead .site-heading .subheading {
   font-weight: 500;
 }
 
-/*
-Blurry background for Navbar while scrolling up
-Does not yet work in Firefox
-Font color is not readable in bright theme over header image
-*/
-/* @media (min-width:992px) {
-  #mainNav.is-fixed {
-    background-color: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(5px);
-    border-bottom: rgba(0, 0, 0, 0);
-  }
-} */
-
 .btn {
   font-weight: 600;
   background-color: rgba(0, 0, 0, 0);
@@ -210,4 +191,22 @@ a:hover {
 
 .post-preview > a:focus, .post-preview > a:hover {
   color: #b6b6b6;
+}
+
+.navbar-logo {
+  height: auto; /* Maintain aspect ratio */
+  width: auto !important;
+  margin-right: 1vw; /* Space between the logo and the text */
+}
+
+@media (min-width: 992px) {
+  .navbar-logo {
+    max-height: 15vh;
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar-logo {
+    max-height: 5vh;
+  }
 }

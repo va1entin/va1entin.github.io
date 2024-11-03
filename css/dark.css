@@ -51,26 +51,6 @@
     color: #e2e2e2;
   }
 
-  #mainNav.is-fixed {
-    border-bottom: 1px solid #808080;
-    background-color: rgba(22, 22, 22, 0.9);
-  }
-
-  #mainNav.is-fixed .navbar-brand {
-    color: #e2e2e2;
-  }
-
-  #mainNav.is-fixed .navbar-brand:focus, #mainNav.is-fixed .navbar-brand:hover {
-    color: #cbcbcb;
-  }
-
-  #mainNav.is-fixed .navbar-nav > li.nav-item > a {
-    color: #e2e2e2;
-  }
-
-  #mainNav.is-fixed .navbar-nav > li.nav-item > a:focus, #mainNav.is-fixed .navbar-nav > li.nav-item > a:hover {
-    color: #cbcbcb;
-  }
   .navbar-light .navbar-nav .nav-link {
     color: #e2e2e2;
   }
