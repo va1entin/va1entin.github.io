@@ -1,4 +1,32 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on Blog</title><link>https://valh.io/page/</link><description>Recent content in Pages on Blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://valh.io/page/index.xml" rel="self" type="application/rss+xml"/><item><title>Terms of use</title><link>https://valh.io/terms-of-use/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://valh.io/terms-of-use/</guid><description>&lt;h1 id="welcome-to-valentin-heidelbergers-blog">Welcome to Valentin Heidelberger&amp;rsquo;s blog&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pages on Blog</title><link>https://valh.io/page/</link><description>Recent content in Pages on Blog</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sun, 03 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://valh.io/page/index.xml" rel="self" type="application/rss+xml"/><item><title>About me</title><link>https://valh.io/about-me/</link><pubDate>Sun, 03 Nov 2024 00:00:00 +0000</pubDate><guid>https://valh.io/about-me/</guid><description>&lt;!-- Hi, thanks for checking out my website! This page contains information about my professional career. You can also find me on
+&lt;a href="https://www.linkedin.com/in/va1entin" target="_blank">
+ &lt;i class="fab fa-linkedin fa-lg">&lt;/i>
+ LinkedIn&lt;/a>. -->
+&lt;div style="display: flex; align-items: center; margin-top: 0.5em;">
+ &lt;img src="https://valh.io/img/me_square.jpg" alt="Your Photo" style="width: 5em; height: 5em; border-radius: 10%; margin-right: 0.5em;">
+ &lt;span>Hi, thanks for checking out my website! This page contains information about my professional career. You can also find me on
+ &lt;a href="https://www.linkedin.com/in/va1entin" target="_blank">
+ &lt;i class="fab fa-linkedin fa-lg">&lt;/i>
+ LinkedIn&lt;/a>.
+ &lt;/span>
+&lt;/div>
+&lt;hr>
+&lt;h1 id="work-experience">Work experience&lt;/h1>
+&lt;h2 id="senior-solutions-engineer">Senior Solutions Engineer&lt;/h2>
+&lt;div class="cursive">
+ &lt;div class="left">
+ &lt;a href="https://github.com" target="_blank">
+ &lt;i class="fab fa-github fa-xl">&lt;/i>
+ GitHub
+ &lt;/a>
+ | Remote
+ &lt;/div>
+ &lt;div class="right">
+ 02/2023 – 08/2024
+ &lt;/div>
+&lt;/div>
+&lt;br>
+&lt;p>I worked with GitHub&amp;rsquo;s largest Enterprise clients in Europe on their AI and DevSecOps journey across the software development lifecycle from first talks and comprehensive demos through keynotes at internal conferences and security + legal talks with highly regulated industry teams to roll-out and adoption workshops as well as participation in beta programs and collaboration with product and engineering teams.&lt;/p></description></item><item><title>Terms of use</title><link>https://valh.io/terms-of-use/</link><pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate><guid>https://valh.io/terms-of-use/</guid><description>&lt;h1 id="welcome-to-valentin-heidelbergers-blog">Welcome to Valentin Heidelberger&amp;rsquo;s blog&lt;/h1>
 &lt;p>These terms and conditions outline the rules and regulations for the use of Valentin Heidelberger&amp;rsquo;s blog.
 &lt;strong>Valentin Heidelberger&amp;rsquo;s blog&lt;/strong> is located at:
 &lt;a href="https://valh.io">https://valh.io&lt;/a>&lt;/p>
