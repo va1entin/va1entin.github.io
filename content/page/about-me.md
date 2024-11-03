@@ -30,7 +30,7 @@ toc: true
 <div class="cursive">
   <div class="left">
     <a href="https://github.com" target="_blank">
-      <i class="fab fa-github fa-lg"></i>
+      <i class="fab fa-github fa-xl"></i>
       GitHub
     </a>
     | Remote
@@ -52,6 +52,7 @@ Having joined a week before GitHub Copilot Business went GA, I was privileged to
 <div class="cursive">
   <div class="left">
     <a href="https://cgi.com" target="_blank">
+    <i class="fas fa-angle-up fa-xl fa-rotate-by" style="--fa-rotate-angle: 45deg;"></i>
     CGI
     </a>
     | Remote
@@ -77,7 +78,7 @@ Having joined a week before GitHub Copilot Business went GA, I was privileged to
 <div class="cursive">
   <div class="left">
     <a href="https://univention.com" target="_blank">
-      <i class="fab fa-linux fa-lg"></i>
+      <i class="fab fa-linux fa-xl"></i>
       Univention
     </a>
     | Bremen, Germany
@@ -101,7 +102,7 @@ Having joined a week before GitHub Copilot Business went GA, I was privileged to
 <div class="cursive">
   <div class="left">
     <a href="https://univention.com" target="_blank">
-      <i class="fab fa-linux fa-lg"></i>
+      <i class="fab fa-linux fa-xl"></i>
       Univention
     </a>
     | Bremen, Germany
@@ -129,7 +130,7 @@ deployment with Ansible
 <div class="cursive">
   <div class="left">
     <a href="https://www.iu-university.org" target="_blank">
-      <i class="fas fa-building-columns fa-lg"></i>
+      <i class="fas fa-building-columns fa-xl"></i>
       IU International University of Applied Sciences
     </a>
     | Remote
@@ -148,7 +149,7 @@ Remote part-time study parallel to my tenures at CGI and GitHub
 <div class="cursive">
   <div class="left">
     <a href="https://www.szut.de/international/schulzentrum-utbremen-english.html" target="_blank">
-      <i class="fas fa-building-columns fa-lg"></i>
+      <i class="fas fa-building-columns fa-xl"></i>
       Europaschule SII Utbremen
     </a>
     | Bremen, Germany
