@@ -39,12 +39,12 @@ params:
         raspberrypi: raspberrypi.webp
         technology: rz.webp
     fourofour_img: /img/404.webp
-    featured_tags:
-        - linux
-        - raspberrypi
-        - homeassistant
-        - data
-        - cheatsheet
+    # featured_tags:
+    #     - linux
+    #     - raspberrypi
+    #     - homeassistant
+    #     - data
+    #     - cheatsheet
     mainSections:
         - post
     featuredImageField: header_img
@@ -61,8 +61,8 @@ params:
             discogs_username: va1entin
             github_username:  va1entin
             gitlab_username: va1entin
-            mastodon_instance: mastodon.social
-            mastodon_username: valh
+            # mastodon_instance: mastodon.social
+            # mastodon_username: valh
 
     dateFormat:
         published: Jan 02, 2006
