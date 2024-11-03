@@ -22,7 +22,7 @@ taxonomies:
 params:
     default_author: Valentin Heidelberger
     description: The personal blog of Valentin Heidelberger
-    #aboutme: true
+    aboutme: true
     nav:
         # bell: true
         search: true # Display link to search in navbar
