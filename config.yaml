@@ -22,11 +22,12 @@ taxonomies:
 params:
     default_author: Valentin Heidelberger
     description: The personal blog of Valentin Heidelberger
-    aboutme: true
     nav:
         # bell: true
-        search: true # Display link to search in navbar
+        logo: true
         title: Valentin Heidelberger # Displayed on the navbar's left side
+        search: true # Display link to search in navbar
+        aboutme: true
     header_img: /img/posts/lightbulb_saya-kimura.jpg
     taxonomy_header_imgs:
         cheatsheet: linux.webp
