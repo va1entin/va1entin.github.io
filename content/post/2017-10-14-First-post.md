@@ -2,7 +2,6 @@
 author: Valentin Heidelberger
 comments: true
 date: "2017-10-14T13:36:40Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: My first test post
 tags:
 - none

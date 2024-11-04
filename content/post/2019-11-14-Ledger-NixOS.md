@@ -2,7 +2,6 @@
 author: Valentin Heidelberger
 comments: false
 date: "2019-11-14T18:21:22Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: ""
 tags:
 - technology

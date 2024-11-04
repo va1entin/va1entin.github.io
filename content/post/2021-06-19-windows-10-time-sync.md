@@ -2,7 +2,6 @@
 author: Valentin Heidelberger
 comments: false
 date: "2021-06-19T17:22:45Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: ""
 tags:
 - windows

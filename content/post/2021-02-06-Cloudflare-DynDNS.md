@@ -2,7 +2,6 @@
 author: Valentin Heidelberger
 comments: false
 date: "2021-02-06T15:53:11Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: No global API key required
 tags:
 - raspberrypi

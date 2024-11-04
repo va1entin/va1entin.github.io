@@ -1,7 +1,6 @@
 ---
 author: Valentin Heidelberger
 date: "2017-12-19T17:27:20Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: with a Sysinternals tool
 tags:
 - windows

@@ -2,7 +2,6 @@
 author: Valentin Heidelberger
 comments: false
 date: "2019-10-28T18:41:14Z"
-header_img: /img/posts/lightbulb_saya-kimura.jpg
 subtitle: My lightning talk at Nextcloud conference 2019
 tags:
 - technology

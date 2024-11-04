@@ -28,7 +28,7 @@ params:
         title: Valentin Heidelberger # Displayed on the navbar's left side
         search: true # Display link to search in navbar
         aboutme: true
-    header_img: /img/posts/lightbulb_saya-kimura.jpg
+    header_img: /img/dall_e_1.webp
     taxonomy_header_imgs:
         cheatsheet: linux.webp
         data: data.webp
