@@ -129,7 +129,7 @@ deployment with Ansible
 ## B.Sc. Applied Artificial Intelligence
 <div class="cursive">
   <div class="left">
-    <a href="https://www.iu-university.org" target="_blank">
+    <a href="https://www.iu.org" target="_blank">
       <i class="fas fa-building-columns fa-xl"></i>
       IU International University of Applied Sciences
     </a>
