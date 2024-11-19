@@ -203,10 +203,27 @@ a:hover {
   .navbar-logo {
     max-height: 15vh;
   }
+  header.masthead {
+    min-height: 17vh;
+  }
 }
 
 @media (max-width: 991px) {
   .navbar-logo {
     max-height: 5vh;
   }
+  header.masthead {
+    min-height: 7vh;
+  }
+}
+
+@media (min-width: 992px) {
+  .only-on-mobile{
+    display: none;
+  }
+}
+
+.nav-link.active {
+  border: 1px solid white;
+  border-radius: 15px; /* rounded corners */
 }
