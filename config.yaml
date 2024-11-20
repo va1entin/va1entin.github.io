@@ -1,6 +1,6 @@
 baseurl: https://valh.io
 languageCode: en-us
-theme: hugo-theme_clean-blog_enhanced
+theme: hugo-theme_clean-blog-custom
 # theme: clean-blog-local
 pagination:
   pagerSize: 7
