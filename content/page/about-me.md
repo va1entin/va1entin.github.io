@@ -4,7 +4,7 @@ date: '2024-11-03'
 aliases:
   - about-me
 title: About me
-toc: false
+toc: true
 ---
 
 <!-- Hi, thanks for checking out my website! This page contains information about my professional career. You can also find me on
