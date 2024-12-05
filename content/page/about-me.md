@@ -13,7 +13,7 @@ toc: false
   LinkedIn</a>. -->
 
 <div style="display: flex; align-items: center; margin-top: 0.5em;">
-  <img src="/img/me_square.jpg" alt="Your Photo" style="width: 5em; height: 5em; border-radius: 10%; margin-right: 0.5em;">
+  <img src="/img/me_square.jpg" style="width: 5em; height: 5em; border-radius: 10%; margin-right: 0.5em;">
   <span>Hi, thanks for checking out my website! This page contains information about my professional career. You can also find me on
   <a href="https://www.linkedin.com/in/va1entin" target="_blank">
     <i class="fab fa-linkedin fa-lg"></i>
