@@ -227,3 +227,11 @@ a:hover {
   border: 1px solid white;
   border-radius: 15px; /* rounded corners */
 }
+
+.navbar {
+  /* Disable border on mobile hamburger menu */
+  --bs-navbar-toggler-border-color: rgba(0, 0, 0, 0);
+
+  /* Disable focus "selection" border on mobile hamburger menu */
+  --bs-navbar-toggler-focus-width: 0rem;
+}
