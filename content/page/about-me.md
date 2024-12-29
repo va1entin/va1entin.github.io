@@ -23,7 +23,7 @@ toc: false
 
 <hr>
 
-# Work experience
+# **Work experience**
 
 ## Senior Solutions Engineer
 
@@ -124,7 +124,7 @@ deployment with Ansible
 
 <hr>
 
-# Education
+# **Education**
 
 ## B.Sc. Applied Artificial Intelligence
 <div class="cursive">
@@ -166,7 +166,7 @@ Dual IT systems apprenticeship per the German apprenticeship system with 3/4 spe
 
 <hr>
 
-# Other certifications
+# **Other certifications**
 Click on certificate name for verification
 
 ## Languages (natural/human)
